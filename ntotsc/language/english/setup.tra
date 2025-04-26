@@ -88,7 +88,7 @@ Not Usable By:
  Monk
  Beast Master~
 
-@22   = ~Mace +3: 'Defiler'~
+@22   = ~Mace +2: 'Defiler'~
 @24   = ~This was the personal weapon of Nirel, a powerful cleric, whom little is know about.  However, history does record that he was a vile zealot whose hatred for followers of other faiths knew almost no bounds. It is said that he kept the heads of his victims as trophies. He was personally responsible for defiling over one hundred temples of other faiths; thus earning himself, and his mace, the nickname 'Defiler'.
 
 STATISTICS:
@@ -97,7 +97,7 @@ Damage: 1D6 + 3
 THAC0:  +2
 Damage type: crushing
 Weight: 7
-Speed Factor: 6
+Speed Factor: 5
 Proficiency Type: Mace
 Type:  1-handed
 Requires: 3 Strength
@@ -193,7 +193,6 @@ Damage bonus: +1
 THAC0 bonus: +1
 Special:
   50% chance to inflict additional 2D3 fire damages
-  Attacks per round set to 2
   Fire/Cold Resistance bonus: 20%
 Weight: 3
 Speed Factor: 2
@@ -378,7 +377,7 @@ Usable By:
 @85   = ~Key to the Treasury~
 @86   = ~This key was in the possession of Duke Belt. Probably for some exceptional reason.~
 @88   = ~Ring from the Grave~
-@89   = ~While looking onto the ring's shining surface, you are able to see the mirror image of an unknown room which is difficult to describe for the darkness pervading it. The text etched along the inner face of ring says: "Dagger cuts through stone circle, ring enlightens the darkness".~
+@89   = ~While looking onto the ring's shining surface, you are able to see the mirror image of an unknown room which is difficult to describe for the darkness pervading it. The text etched along the inner face of the ring says: "Dagger cuts through stone circle, ring enlightens the darkness".~
 @91   = ~This rusted dagger seems ordinarily unuseful in any struggle, but its magic is still measurably present: When a part is broken off, in the blink of an eye the damage is refilled with new material.~
 @92   = ~Key to desk
 This key is sized to fit a small lock, such as a cabinet or desk.~
@@ -1102,7 +1101,7 @@ D.~
 // #34932 (BGII)
 @506 = ~Adventurer~
 // #33246 (BGII)
-@507 = ~Deamon Heart~
+@507 = ~Demon Heart~
 // #33248 (BGII)
 @508 = ~No one said that demon hearts were supposed to be pretty, but you certainly weren't expecting this mushy, fleshy bag of vileness. Heavy and wet, the organ still beats, and even stuffed away with your belongings you hear the dreadful thub-dub. Every now and then you must check to make sure it has not bounced free of your pack.~
 // #36938 (BGII)
