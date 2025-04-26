@@ -1,3 +1,15 @@
+Changelog for v5.1.0 (Angel)
+
+- ntaxe01 - Corrected duration of stun effect
+- ntblun03 - Corrected duration of stun effect
+- ntblun04 - Corrected thac0 bonus, enchantment level and speed
+- ntplat04 - Set unusability flag for Avenger kit
+- ntring04 - Corrected bam offset
+- ntrobe04 - Set unusability flag for Bard class
+- Lower cased all filenames
+- Implemented basic mod immutability
+
+
 Changelog for v2.1.0
 -"dead rat" item no longer has a dead cat for description BAM
 -Nadalin: after returning to his boat, he will ship the PC to the salamandr island any time (even if quest is finished).
@@ -11,6 +23,7 @@ Changelog for v2.1.0
 -removed unused script ghotale.baf
 -reduced number of cultists in AR61PB.are (temple of Black Hand) for difficulty lower than hard
 -AR51PB.are (dungeon in Firewine Bridge) exit to Firewine area now requires whole party, as well
+
 -Once entered Firewine dungeon, the scroll will disappear and the entrance will stay open.
 
 
