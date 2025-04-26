@@ -1,4 +1,3 @@
-
 // Northern Tales of the Sword Coast
 // Original creator of NTotSC: Aurelinus
 // BGT version by SirBillyBob, updated by erebusant (up to version 171)
@@ -7,219 +6,138 @@
 // EET compatibility by k4thos
 // BG:EE compatibility, independence to DSotSC, and journal system by jastey
 
-BACKUP ~ntotsc/backup~
+BACKUP ~weidu_external/backup/ntotsc~
 AUTHOR ~http://www.shsforums.net/forum/202-dsotsc-bgt/~
 VERSION ~5.0.0~
 README ~ntotsc/docs/[%LANGUAGE%]ReadMe-NTotSC.txt~ ~ntotsc/docs/ReadMe-NTotSC.txt~
 AUTO_TRA ~ntotsc/language/%s/D~
 ASK_EVERY_COMPONENT
+AUTO_EVAL_STRINGS
 
 /////                                                  \\\\\
 ///// pre-install preparations                         \\\\\
 /////                                                  \\\\\
 
 ALWAYS
-<<<<<<<< .../blank.txt
->>>>>>>>
-	INCLUDE ~ntotsc/lib/macros.tpa~
-	INCLUDE ~ntotsc/lib/a7_tools.tpa~
-	INCLUDE ~ntotsc/lib/read_journal_strref.tpa~
-	LAF GET_SYSTEM_ARCH RET SYSTEM_ARCH END
-	ACTION_IF ~%WEIDU_OS%~ STRING_EQUAL_CASE ~win32~ BEGIN
-		OUTER_SPRINT os_slash ~\~
-		OUTER_SPRINT exe ~.exe~
-		OUTER_SPRINT WEIDU_EXECUTABLE ~setup-NTotSC.exe~
-		OUTER_SPRINT bash_debug ~ | %MOD_FOLDER%\bin\win32\wtee.exe -a %MOD_FOLDER%\bash.debug~
-	END ELSE BEGIN //osx, unix
-		OUTER_SPRINT os_slash ~/~
-		OUTER_SPRINT exe ~~
-		OUTER_SPRINT WEIDU_EXECUTABLE ~./%MOD_FOLDER%/weidu_%WEIDU_OS%~
-		OUTER_SPRINT bash_debug ~ 2>>%MOD_FOLDER%/bash.debug | tee -a %MOD_FOLDER%/bash.debug~
-		AT_NOW ~chmod +x %MOD_FOLDER%/bin/%WEIDU_OS%/tileconv~ EXACT
-		AT_NOW ~chmod +x %MOD_FOLDER%/bin/%WEIDU_OS%/tile2ee~ EXACT
-		AT_NOW ~chmod +x %MOD_FOLDER%/bin/%WEIDU_OS%/tisunpack~ EXACT
-	END
-	ACTION_IF GAME_IS ~bgt~ BEGIN
-		INCLUDE ~ntotsc/lib/g3_bgt_cpmvars.tpa~
-		OUTER_SPRINT platform ~bgt~
-		OUTER_SPRINT engine ~old~
-		OUTER_SPRINT FirewineBridge_entrance ~EXIT3400~
-		OUTER_SPRINT FireLeafForest_entrance ~EXIT4300~
-		OUTER_SPRINT Larswood_entrance ~EXIT9000~
-		OUTER_SPRINT Temple_entrance ~EXIT9300~
-		OUTER_SPRINT PLAT09 ~PLAT09~
-		OUTER_SPRINT POTN55 ~POTN55~
-		OUTER_SPRINT SPIN996 ~BGIN996~ //TANARI_DEATH_GAZE
-		OUTER_SPRINT OR_SpellCastOnMe ~OR(8)~
-		OUTER_SPRINT SpellCastOnMe_WIZARD_REMOVE_MAGIC ~~
-		OUTER_SPRINT RESTCAMP ~RESTCAMP~
-	END
-	ACTION_IF GAME_IS ~eet~ BEGIN
-		INCLUDE ~EET/other/cpmvars/eet_cpmvars.tpa~
-		OUTER_SPRINT platform ~eet~
-		OUTER_SPRINT engine ~ee~
-		OUTER_SPRINT FirewineBridge_entrance ~EXIT4500~
-		OUTER_SPRINT FireLeafForest_entrance ~EXIT5300~
-		OUTER_SPRINT Larswood_entrance ~EXIT2900~
-		OUTER_SPRINT Temple_entrance ~EXIT3400~
-		OUTER_SET BG1AREA = IDS_OF_SYMBOL (~areatype~ ~BG1AREA~)
-		OUTER_SPRINT PLAT09 ~PLAT09~
-		OUTER_SPRINT POTN55 ~POTN55~
-		OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
-		OUTER_SPRINT OR_SpellCastOnMe ~OR(9)~
-		OUTER_SPRINT SpellCastOnMe_WIZARD_REMOVE_MAGIC ~SpellCastOnMe([PC],WIZARD_REMOVE_MAGIC)~
-		OUTER_SPRINT RESTCAMP ~REST~
-	END
-	ACTION_IF GAME_IS ~bgee~ BEGIN
-		INCLUDE ~ntotsc/lib/liam_bgee_vars.tpa~
-		OUTER_SPRINT platform ~bgee~
-		OUTER_SPRINT engine ~ee~
-		OUTER_SPRINT FirewineBridge_entrance ~EXIT4500~
-		OUTER_SPRINT FireLeafForest_entrance ~EXIT5300~
-		OUTER_SPRINT Larswood_entrance ~EXIT2900~
-		OUTER_SPRINT Temple_entrance ~EXIT3400~
-		OUTER_SPRINT PLAT09 ~PLAT04~
-		OUTER_SPRINT POTN55 ~POTN52~
-		OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
-		OUTER_SPRINT OR_SpellCastOnMe ~OR(8)~
-		OUTER_SPRINT SpellCastOnMe_WIZARD_REMOVE_MAGIC ~~
-		OUTER_SPRINT RESTCAMP ~REST~
-	END
-	ACTION_IF ENGINE_IS ~bgee bg2ee~ BEGIN
-		COPY - ~weidu.conf~ ~.../weidu.conf~
-			READ_2DA_ENTRY 0 2 3 "lang_dir"
-			ACTION_DEFINE_ASSOCIATIVE_ARRAY charsetsTable BEGIN
-				"german" => "CP1252"
-				"english" => "CP1252"
-				"french" => "CP1252"
-				"italian" => "CP1252"
-				"polish" => "CP1250"
-				"russian" => "CP1251"
-				"castilian" => "CP1252"
-				"schinese" => "CP936"
-				"spanish" => "CP1252"
-			END
-			ACTION_DEFINE_ARRAY charsetsReloadArray BEGIN setup journal END
-			ACTION_DEFINE_ARRAY charsetsNoConvertArray BEGIN install END
-			LAF ~HANDLE_CHARSETS~
-				INT_VAR
-				infer_charsets = 0
-				STR_VAR
-				tra_path = "NTotSC/language"
-				iconv_path = "NTotSC/bin/win32/iconv" //available as part of the base system on OS X and GNU/Linux
-				charset_table = charsetsTable
-				reload_array = charsetsReloadArray
-				noconvert_array = charsetsNoConvertArray
-			END
+  OUTER_SPRINT external_loc "weidu_external"
+  OUTER_SPRINT tra_base "language"
+  OUTER_SPRINT tra_setup "setup"
+  OUTER_SPRINT ini_file "ntotsc"
 
-		LOAD_TRA ~ntotsc/language/%LANGUAGE%/setup-ee.tra~
-	END
-	/* consider installed DSotSC - BGT/EET vs. BG:EE versions */
-	ACTION_IF ((MOD_IS_INSTALLED ~DSotSC/DSotSC.TP2~ "0") AND FILE_EXISTS_IN_GAME ~DSPOTN01.itm~) BEGIN
-	PRINT @513
-		OUTER_SPRINT DSAMUL08 ~DSAMUL08~
-		OUTER_SPRINT DSAROW50 ~DSAROW50~
-		OUTER_SPRINT DSBOLT01 ~DSBOLT01~
-		OUTER_SPRINT DSWAND01 ~DSWAND01~
-		OUTER_SPRINT DSWAND03 ~DSWAND03~
-		OUTER_SPRINT SCRLDS41 ~SCRLDS41~
-		OUTER_SPRINT SCRLDS32 ~SCRLDS32~
-		OUTER_SPRINT SCRLDS51 ~SCRLDS51~
-		OUTER_SPRINT SCRLDS62 ~SCRLDS62~
-		OUTER_SPRINT SCRLDS21 ~SCRLDS21~
-		OUTER_SPRINT SCRLDS22 ~SCRLDS22~
-		OUTER_SPRINT SCRLDS74 ~SCRLDS74~
-	END
+  INCLUDE "%MOD_FOLDER%/lib/sfo_immutable.tpa"
 
-	ACTION_IF MOD_IS_INSTALLED ~ds/setup-ds.TP2~ "0" BEGIN
-	PRINT @527
-		OUTER_SPRINT DSAMUL08 ~AMULDS02~
-		OUTER_SPRINT DSAROW50 ~AROWDS01~
-		OUTER_SPRINT DSBOLT01 ~BOLTDS01~
-		OUTER_SPRINT DSPOTN01 ~POTN50~
-		OUTER_SPRINT DSWAND01 ~WANDS01~
-		OUTER_SPRINT DSWAND03 ~WAND50~
-		OUTER_SPRINT SCRLDS41 ~MAGE417~
-		OUTER_SPRINT SCRLDS32 ~MAGE322~
-		OUTER_SPRINT SCRLDS51 ~MAGE518~
-		OUTER_SPRINT SCRLDS62 ~MAGE607~
-		OUTER_SPRINT SCRLDS21 ~MAGE222~
-		OUTER_SPRINT SCRLDS22 ~MAGE221~
-		OUTER_SPRINT SCRLDS74 ~MAGE703~
-	END
-	ACTION_IF NOT MOD_IS_INSTALLED ~ds/setup-ds.TP2~ "0" BEGIN
-		OUTER_SPRINT DSPOTN01 ~DSPOTN01~
-	END
+  INCLUDE "%MOD_FOLDER%/lib/always.tpa"
 END
 
 LANGUAGE
 	~English~
 	~english~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 
 LANGUAGE
 	~German (translation by Leonardo Watson)~
 	~german~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/german/setup.tra~
+	~weidu_external/lang/ntotsc/german/setup.tra~
 	~ntotsc/language/german/journal.tra~
+	~weidu_external/lang/ntotsc/german/journal.tra~
 
 LANGUAGE
 	~Italian (translation by ilot)~
 	~italian~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/italian/setup.tra~
+	~weidu_external/lang/ntotsc/italian/setup.tra~
 	~ntotsc/language/italian/journal.tra~
+	~weidu_external/lang/ntotsc/italian/journal.tra~
 
 LANGUAGE
 	~Polish~
 	~polish~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/polish/setup.tra~
+	~weidu_external/lang/ntotsc/polish/setup.tra~
 	~ntotsc/language/polish/journal.tra~
+	~weidu_external/lang/ntotsc/polish/journal.tra~
 
 LANGUAGE
 	~Russian~
 	~russian~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/russian/setup.tra~
+	~weidu_external/lang/ntotsc/russian/setup.tra~
 	~ntotsc/language/russian/journal.tra~
+	~weidu_external/lang/ntotsc/russian/journal.tra~
 
 LANGUAGE
 	~French (translation by Streen)~
 	~french~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/french/setup.tra~
+	~weidu_external/lang/ntotsc/french/setup.tra~
 	~ntotsc/language/french/journal.tra~
+	~weidu_external/lang/ntotsc/french/journal.tra~
 
 LANGUAGE
 	~Spanish (translation by alaisFcZ)~
 	~spanish~
 	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/spanish/setup.tra~
+	~weidu_external/lang/ntotsc/spanish/setup.tra~
 	~ntotsc/language/spanish/journal.tra~
+	~weidu_external/lang/ntotsc/spanish/journal.tra~
 
 /*
 LANGUAGE
 	~Castilian~
 	~castilian~
-	~ntotsc/language/castilian/setup.tra~
+	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
+	~ntotsc/language/castilian/setup.tra~
+	~weidu_external/lang/ntotsc/castilian/setup.tra~
+	~ntotsc/language/castilian/journal.tra~
+	~weidu_external/lang/ntotsc/castilian/journal.tra~
 */
 
 LANGUAGE
 	~Simplified Chinese(by Archenemy,Latest update by You Ye & Lewis Liu (V5.0.0))~
 	~schinese~
+	~ntotsc/language/english/setup.tra~
+	~weidu_external/lang/ntotsc/english/setup.tra~
+	~ntotsc/language/english/install.tra~
+	~weidu_external/lang/ntotsc/english/install.tra~
+	~ntotsc/language/english/journal.tra~
+	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/schinese/setup.tra~
-    ~ntotsc/language/schinese/install.tra~
+	~weidu_external/lang/ntotsc/schinese/setup.tra~
 	~ntotsc/language/schinese/journal.tra~
+	~weidu_external/lang/ntotsc/schinese/install.tra~
+	~ntotsc/language/schinese/journal.tra~
+	~weidu_external/lang/ntotsc/schinese/journal.tra~
 
 
 
@@ -242,7 +160,7 @@ FORBID_COMPONENT ~setup-bp-bgt-worldmap.tp2~ ~0~ @530
 
 
 /* @10084: The Cult of the Black Hand [AR61PB.baf] */
-ADD_JOURNAL TITLE (@10084) @10017 @10020 @10037 @10059 @10085 @10102 @10104 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10084) @10017 @10020 @10037 @10059 @10085 @10102 @10104 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* The Great Book of the Unknowing [ar82pb.baf] */
 /* EET: 231404 */
@@ -250,69 +168,69 @@ ADD_JOURNAL TITLE (@10084) @10017 @10020 @10037 @10059 @10085 @10102 @10104 USIN
 /* @10109: only for BGT */
 
 ACTION_IF GAME_IS ~eet~ BEGIN
-  ADD_JOURNAL EXISTING TITLE (#231404) @10002 @10018 @10019 @10021 @10022 @10052 @10062 @10063 @10095 @10103 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+  ADD_JOURNAL EXISTING TITLE (#231404) @10002 @10018 @10019 @10021 @10022 @10052 @10062 @10063 @10095 @10103 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 END
 
 ACTION_IF GAME_IS ~bgee~ BEGIN
-  ADD_JOURNAL EXISTING TITLE (#31404) @10002 @10018 @10019 @10021 @10022 @10052 @10062 @10063 @10095 @10103 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+  ADD_JOURNAL EXISTING TITLE (#31404) @10002 @10018 @10019 @10021 @10022 @10052 @10062 @10063 @10095 @10103 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 END
 
 /* @10083   = ~Isle of the Sirines~ @10070 [ship1.baf] */
-ADD_JOURNAL TITLE (@10083) @10004 @10011 @10023 @10031 @10035 @10038 @10054 @10070 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10083) @10004 @10011 @10023 @10031 @10035 @10038 @10054 @10070 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10010: Mystery at the Northern Citadel [NTKROTAN.d] */
-ADD_JOURNAL TITLE (@10010) @10003 @10007 @10008 @10009 @10015 @10032 @10060 @10061 @10105 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10010) @10003 @10007 @10008 @10009 @10015 @10032 @10060 @10061 @10105 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10096: ~Nadalin the Fisherman~ (subquest to "Trouble at the Northern Coast") */
-ADD_JOURNAL TITLE (@10096) @10039 @10040 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10096) @10039 @10040 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10046: Phantom East of Beregost */
-ADD_JOURNAL TITLE (@10073) @10071 @10072 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10073) @10071 @10072 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* The Locked Altar of Helm - before talking to Avery */
-ADD_JOURNAL @10057 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10057 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10086: The Symbol of Helm (after talking to Avery) [ar37pb.baf] */
-ADD_JOURNAL TITLE (@10086) @10005 @10069 @10087 @10088 @10089 @10090 @10091 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10086) @10005 @10069 @10087 @10088 @10089 @10090 @10091 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10084   = ~The Fields of the Dead~ [NTGGHOTA.d] */
-ADD_JOURNAL TITLE (@10082) @10012 @10013 @10030 @10075 @10098 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10082) @10012 @10013 @10030 @10075 @10098 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10092   = ~The Tanar'ri in the Cloud Peaks~ */
-ADD_JOURNAL TITLE (@10092) @10093 @10094 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10092) @10093 @10094 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10041: Trouble at the Northern Coast [ntszyper.d] */
-ADD_JOURNAL TITLE (@10041) @10024 @10025 @10026 @10067 @10068 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10041) @10024 @10025 @10026 @10067 @10068 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* Lenore and Montgomery */
-ADD_JOURNAL @10033 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10033 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* [attack of Ghostnights] */
-ADD_JOURNAL @10006 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10006 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /*[journal entry about Haebal, gets removed if he attacks] */
-ADD_JOURNAL @10016 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10016 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* Warded Dungeon Under Firewine Bridge */
-ADD_JOURNAL TITLE (@10111) @10001 @10110 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10111) @10001 @10110 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10046: Olivia and the Gulls */
-ADD_JOURNAL TITLE (@10046) @10044 @10045 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10046) @10044 @10045 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10051: Ordolath's Candle */
-ADD_JOURNAL TITLE (@10051) @10048 @10049 @10050 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10051) @10048 @10049 @10050 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* NTREDEDG.dlg */
-ADD_JOURNAL @10058 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10058 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* Rats for Pooch */
-ADD_JOURNAL @10074 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10074 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* Rescue Magnad's and Winorma's Children */
-ADD_JOURNAL TITLE (@10099) @10036 @10097 @10106 @10107 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10099) @10036 @10097 @10106 @10107 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 /* @10078: Rescue Pandris from the Orcs */
-ADD_JOURNAL TITLE (@10078) @10053 @10076 @10077 @10108 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10078) @10053 @10076 @10077 @10108 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 
 /////                                                  \\\\\
@@ -391,7 +309,7 @@ BUT_ONLY
 
 
 
-INCLUDE ~ntotsc/lib/tooltip.tpa~
+INCLUDE ~%MOD_FOLDER%/lib/tooltip.tpa~
 LAF ~ADD_ITEM_TOOLTIPS~ STR_VAR item = ~NTBLUN06~ tooltips = ~@25 @50~ END
 LAF ~ADD_ITEM_TOOLTIPS~ STR_VAR item = ~NTBLUN07~ tooltips = ~@25 @50~ END
 
@@ -407,63 +325,63 @@ BUT_ONLY
 ///// install spells                                   \\\\\
 /////                                                  \\\\\
 
-COPY ~ntotsc/base/spl/ntswd5xp.spl~ ~override~
+COPY ~%MOD_FOLDER%/base/spl/ntswd5xp.spl~ ~override~
    LPF ALTER_SPELL_EFFECT
    INT_VAR
      match_opcode  = 139   // Display String
      parameter1    = RESOLVE_STR_REF(@539)  //
    END
 
-COPY ~ntotsc/base/spl/nostring~ ~override~
+COPY ~%MOD_FOLDER%/base/spl/nostring~ ~override~
 
 
 /////                                                  \\\\\
 ///// install effects                                  \\\\\
 /////                                                  \\\\\
 
-COPY ~ntotsc/base/eff~ ~override~
+COPY ~%MOD_FOLDER%/base/eff~ ~override~
 
 /////                                                  \\\\\
 ///// install items                                    \\\\\
 /////                                                  \\\\\
 
-COPY ~ntotsc/base/itm/ntarrow1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntarrow1.itm~ ~override~
 	SAY NAME2 @1
 	SAY DESC @2
 
-COPY ~ntotsc/base/itm/ntarrow2.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntarrow2.itm~ ~override~
 	SAY NAME2 @4
 	SAY DESC @6
 
-COPY ~ntotsc/base/itm/ntarrow5.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntarrow5.itm~ ~override~
 	SAY NAME2 @11
 	SAY DESC @12
 
-COPY ~ntotsc/base/itm/ntaxe01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntaxe01.itm~ ~override~
 	SAY NAME2 @14
 	SAY DESC @16
 
-COPY ~ntotsc/base/itm/ntblun03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntblun03.itm~ ~override~
 	SAY NAME2 @18
 	SAY DESC @20
 
-COPY ~ntotsc/base/itm/ntblun04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntblun04.itm~ ~override~
 	SAY NAME2 @22
 	SAY DESC @24
 
-COPY ~ntotsc/base/itm/ntbelt01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbelt01.itm~ ~override~
 	SAY NAME2 @541
 	SAY DESC @542
 
-COPY ~ntotsc/base/itm/ntbolt1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbolt1.itm~ ~override~
 	SAY NAME2 @28
 	SAY DESC @29
 
-COPY ~ntotsc/base/itm/ntboot01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntboot01.itm~ ~override~
 	SAY NAME2 @31
 	SAY DESC @33
 
-COPY ~ntotsc/base/itm/ntbow02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbow02.itm~ ~override~
 	PATCH_IF GAME_IS ~bgee~ BEGIN
 		SAY NAME1 #6864  //Shortbow
 	END
@@ -471,7 +389,7 @@ COPY ~ntotsc/base/itm/ntbow02.itm~ ~override~
 	SAY NAME2 @35
 	SAY DESC @37
 
-COPY ~ntotsc/base/itm/ntbow03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbow03.itm~ ~override~
 	PATCH_IF GAME_IS ~bgee~ BEGIN
 		SAY NAME1 #6864 //Shortbow
 	END
@@ -479,239 +397,239 @@ COPY ~ntotsc/base/itm/ntbow03.itm~ ~override~
 	SAY NAME2 @38
 	SAY DESC @40
 
-COPY ~ntotsc/base/itm/ntbow04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbow04.itm~ ~override~
 	SAY NAME2 @42
 	SAY DESC @44
 
-COPY ~ntotsc/base/itm/ntbull01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntbull01.itm~ ~override~
 	SAY NAME2 @50
 	SAY DESC @52
 
-COPY ~ntotsc/base/itm/ntchan06.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntchan06.itm~ ~override~
 	SAY NAME2 @61
 	SAY DESC @62
 
-COPY ~ntotsc/base/itm/ntclck01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntclck01.itm~ ~override~
 	SAY NAME2 @65
 	SAY DESC @67
 
-COPY ~ntotsc/base/itm/ntdart1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntdart1.itm~ ~override~
 	SAY NAME2 @81
 	SAY DESC @83
 
-COPY ~ntotsc/base/itm/ntkeypb1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb1.itm~ ~override~
 	SAY NAME2 @85
 	SAY UNIDENTIFIED_DESC @86
 	SAY DESC @86
 
-COPY ~ntotsc/base/itm/ntkeypb2.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb2.itm~ ~override~
 	SAY NAME2 @88
 	SAY UNIDENTIFIED_DESC @89
 	SAY DESC @89
 
-COPY ~ntotsc/base/itm/ntkeypb3.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb3.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @91
 	SAY DESC @91
 
-COPY ~ntotsc/base/itm/ntkeypb4.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb4.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @92
 	SAY DESC @92
 
-COPY ~ntotsc/base/itm/ntkeypb5.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb5.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @93
 	SAY DESC @93
 
-COPY ~ntotsc/base/itm/ntkeypb6.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb6.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @94
 	SAY DESC @94
 
-COPY ~ntotsc/base/itm/ntkeypb7.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntkeypb7.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @95
 	SAY DESC @95
 
-COPY ~ntotsc/base/itm/ntleat05.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntleat05.itm~ ~override~
 	SAY NAME2 @105
 	SAY DESC @106
 
-COPY ~ntotsc/base/itm/ntmisc05.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc05.itm~ ~override~
 	SAY NAME1 @121
 	SAY NAME2 @121
 	SAY UNIDENTIFIED_DESC @122
 	SAY DESC @122
 
-COPY ~ntotsc/base/itm/ntmisc06.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc06.itm~ ~override~
 	SAY NAME1 @123
 	SAY NAME2 @123
 	SAY UNIDENTIFIED_DESC @124
 	SAY DESC @124
 
-COPY ~ntotsc/base/itm/ntmisc07.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc07.itm~ ~override~
 	SAY NAME1 @125
 	SAY NAME2 @125
 	SAY UNIDENTIFIED_DESC @55136
 	SAY DESC @55136
 
-COPY ~ntotsc/base/itm/ntmisc08.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc08.itm~ ~override~
 	SAY NAME1 @519
 	SAY NAME2 @519
 	SAY UNIDENTIFIED_DESC @127
 	SAY DESC @127
 
-COPY ~ntotsc/base/itm/ntmisc10.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc10.itm~ ~override~
 	SAY NAME1 @128
 	SAY NAME2 @128
 	SAY UNIDENTIFIED_DESC @129
 	SAY DESC @129
 
-COPY ~ntotsc/base/itm/ntmisc11.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc11.itm~ ~override~
 	SAY NAME1 @130
 	SAY NAME2 @130
 	SAY UNIDENTIFIED_DESC @55137
 	SAY DESC @55137
 /*
-COPY ~ntotsc/base/itm/ntmisc13.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmisc13.itm~ ~override~
 	SAY NAME1 @55130
 	SAY NAME2 @55130
 	SAY UNIDENTIFIED_DESC @55130
 	SAY DESC @55130
 */
-COPY ~ntotsc/base/itm/ntpblet1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet1.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @133
 	SAY DESC @133
 
-COPY ~ntotsc/base/itm/ntpblet2.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet2.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @134
 	SAY DESC @134
 
-COPY ~ntotsc/base/itm/ntpblet3.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet3.itm~ ~override~
 	SAY NAME1 @135
 	SAY NAME2 @135
 	SAY UNIDENTIFIED_DESC @136
 	SAY DESC @136
 
-COPY ~ntotsc/base/itm/ntpblet4.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet4.itm~ ~override~
 	SAY NAME1 #13195 //Letter
 	SAY NAME2 #13195 //Letter
 	SAY UNIDENTIFIED_DESC @137
 	SAY DESC @137
 
-COPY ~ntotsc/base/itm/ntpblet1.itm~ ~override/ntpblet5.itm~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet1.itm~ ~override/ntpblet5.itm~
 	SAY NAME1 #13195 //Letter
 	SAY NAME2 #13195 //Letter
 	SAY UNIDENTIFIED_DESC @505
 	SAY DESC @505
 
-COPY ~ntotsc/base/itm/ntpblet1.itm~ ~override/ntpblet6.itm~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet1.itm~ ~override/ntpblet6.itm~
 	SAY NAME1 #13195 //Letter
 	SAY NAME2 #13195 //Letter
 	SAY UNIDENTIFIED_DESC @516
 	SAY DESC @516
 
-COPY ~ntotsc/base/itm/ntpblet1.itm~ ~override/ntpblet7.itm~
+COPY ~%MOD_FOLDER%/base/itm/ntpblet1.itm~ ~override/ntpblet7.itm~
 	SAY NAME1 #13195 //Letter
 	SAY NAME2 #13195 //Letter
 	SAY UNIDENTIFIED_DESC @517
 	SAY DESC @517
 
-COPY ~ntotsc/base/itm/ntplat01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntplat01.itm~ ~override~
 	SAY NAME2 @55134
 	SAY DESC @141
 
-COPY ~ntotsc/base/itm/ntplat02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntplat02.itm~ ~override~
 	SAY NAME1 @562
 	SAY NAME2 @549
 	SAY UNIDENTIFIED_DESC @563
 	SAY IDENTIFIED_DESC @550
 
-COPY ~ntotsc/base/itm/ntplat03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntplat03.itm~ ~override~
 	SAY NAME2 @545
 	SAY IDENTIFIED_DESC @546
 
-COPY ~ntotsc/base/itm/ntplat04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntplat04.itm~ ~override~
 	SAY NAME2 @543
 	SAY IDENTIFIED_DESC @544
 
-COPY ~ntotsc/base/itm/ntpotn01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpotn01.itm~ ~override~
 	SAY NAME1 @142
 	SAY NAME2 @142
 	SAY UNIDENTIFIED_DESC @143
 	SAY DESC @143
 
-COPY ~ntotsc/base/itm/ntpotn02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpotn02.itm~ ~override~
 	SAY NAME1 @144
 	SAY NAME2 @144
 	SAY UNIDENTIFIED_DESC @145
 	SAY DESC @145
 
-COPY ~ntotsc/base/itm/ntpotn03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpotn03.itm~ ~override~
 	SAY UNIDENTIFIED_DESC @147
 	SAY DESC @147
 
-COPY ~ntotsc/base/itm/ntpotn04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpotn04.itm~ ~override~
 	SAY NAME1 @148
 	SAY NAME2 @148
 	SAY UNIDENTIFIED_DESC @149
 	SAY DESC @149
 
-COPY ~ntotsc/base/itm/ntpotn05.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntpotn05.itm~ ~override~
 	SAY NAME1 @500
 	SAY NAME2 @500
 	SAY UNIDENTIFIED_DESC @501
 	SAY DESC @501
 
-COPY ~ntotsc/base/itm/ntring02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntring02.itm~ ~override~
 	SAY NAME2 @154
 	SAY DESC @155
 
-COPY ~ntotsc/base/itm/ntring04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntring04.itm~ ~override~
 	SAY NAME2 @560
 	SAY DESC @561
 
-COPY ~ntotsc/base/itm/ntrobe01.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntrobe01.itm~ ~override~
 	SAY NAME2 @547
 	SAY DESC @548
 
-COPY ~ntotsc/base/itm/ntrobe02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntrobe02.itm~ ~override~
 	SAY NAME2 @159
 	SAY DESC @160
 
-COPY ~ntotsc/base/itm/ntrobe03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntrobe03.itm~ ~override~
 	SAY NAME2 @556
 	SAY DESC @557
 
-COPY ~ntotsc/base/itm/ntrobe04.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntrobe04.itm~ ~override~
 	SAY NAME2 @558
 	SAY DESC @559
 
-COPY ~ntotsc/base/itm/ntshld02.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntshld02.itm~ ~override~
 	SAY NAME2 @166
 	SAY DESC @168
 
-COPY ~ntotsc/base/itm/ntspear1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntspear1.itm~ ~override~
 	SAY NAME2 @172
 	SAY DESC @174
 
-COPY ~ntotsc/base/itm/ntstaff1.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntstaff1.itm~ ~override~
 	SAY NAME2 @175
 	SAY DESC @176
 
-COPY ~ntotsc/base/itm/ntswd03.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntswd03.itm~ ~override~
 	SAY NAME2 @188
 	SAY DESC @190
 
-COPY ~ntotsc/base/itm/ntswd05.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntswd05.itm~ ~override~
 	SAY NAME2 @196
 	SAY DESC @197
 
-COPY ~ntotsc/base/itm/ntswd09.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntswd09.itm~ ~override~
 	SAY NAME2 @204
 	SAY DESC @205
 
-COPY ~ntotsc/base/itm/nthellsw.itm~ ~override~ //fire salamander weapon
+COPY ~%MOD_FOLDER%/base/itm/nthellsw.itm~ ~override~ //fire salamander weapon
 
 //Items needed by creatures
 
-COPY ~ntotsc/base/itm/nostring~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/nostring~ ~override~
 
 /* Edited items from base game */
 
@@ -727,7 +645,7 @@ ACTION_IF ((NOT MOD_IS_INSTALLED ~DSotSC/DSotSC.TP2~ "0") AND (NOT MOD_IS_INSTAL
 	PRINT @515
 
     /* Holy water */
-    COPY ~ntotsc/dsotsc/orig_ressources/dspotn01.itm~ ~override~
+    COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dspotn01.itm~ ~override~
 	SAY NAME1 @1244
 	SAY NAME2 @1244
 	SAY UNIDENTIFIED_DESC @1245
@@ -739,17 +657,17 @@ END
 
 /* Items needed for BG:EE */
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~minhp20.itm~ THEN BEGIN
-  COPY ~ntotsc/bgee/minhp20.itm~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/minhp20.itm~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~MISC6M.itm~ THEN BEGIN
-  COPY ~ntotsc/bgee/MISC6M.itm~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/MISC6M.itm~ ~override~
 	SAY NAME2 @507
 	SAY DESC @508
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~SPECTR.itm~ THEN BEGIN
-  COPY ~ntotsc/bgee/SPECTR.itm~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/SPECTR.itm~ ~override~
 END
 
 
@@ -759,16 +677,16 @@ END
 
 //Install new stores
 
-COPY ~ntotsc/base/sto/innabig.sto~ ~override~
+COPY ~%MOD_FOLDER%/base/sto/innabig.sto~ ~override~
 	SAY 0x00c @215
 
-COPY ~ntotsc/base/sto/selanio.sto~ ~override~
+COPY ~%MOD_FOLDER%/base/sto/selanio.sto~ ~override~
 	SAY 0x00c @216
 
-COPY ~ntotsc/base/sto/sthaebal.sto~ ~override~
+COPY ~%MOD_FOLDER%/base/sto/sthaebal.sto~ ~override~
 	SAY 0x00c @217
 
-COPY ~ntotsc/base/sto/tem4801.sto~ ~override~
+COPY ~%MOD_FOLDER%/base/sto/tem4801.sto~ ~override~
 	SAY 0x00c @218
 
 /* store for temple of Helm in Northern Citadel, with one scroll of restoration */
@@ -881,62 +799,62 @@ COPY_EXISTING ~friend.sto~ ~override~
 //install new creatures
 
 
-COPY ~ntotsc/base/cre/ntabigai.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntabigai.cre~ ~override~
 	SAY NAME1 @215
 	SAY NAME2 @215
 
-COPY ~ntotsc/base/cre/ntamelka.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntamelka.cre~ ~override~
 	SAY NAME1 @222
 	SAY NAME2 @222
 
-COPY ~ntotsc/base/cre/ntarchan.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntarchan.cre~ ~override~
 	SAY NAME1 @223
 	SAY NAME2 @223
 
-COPY ~ntotsc/base/cre/ntaschma.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntaschma.cre~ ~override~
 	SAY NAME1 @224
 	SAY NAME2 @224
 
-COPY ~ntotsc/base/cre/ntassaia.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntassaia.cre~ ~override~
 	SAY NAME1 @226
 	SAY NAME2 @226
 
-COPY ~ntotsc/base/cre/ntaureli.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntaureli.cre~ ~override~
 	SAY NAME1 @227
 	SAY NAME2 @227
 
-COPY ~ntotsc/base/cre/ntbalen.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntbalen.cre~ ~override~
 	SAY NAME1 @229
 	SAY NAME2 @229
 
-COPY ~ntotsc/base/cre/ntbknigh.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntbknigh.cre~ ~override~
 	SAY NAME1 @230
 	SAY NAME2 @230
 
-COPY ~ntotsc/base/cre/ntblhcu1.cre~ ~override~
-	~ntotsc/base/cre/ntblhcul.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntblhcu1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntblhcul.cre~ ~override~
 	SAY NAME1 @231
 	SAY NAME2 @231
 	ADD_CRE_ITEM ~BOW05~ #0 #0 #0 ~UNSTEALABLE~ ~INV1~
 
-COPY ~ntotsc/base/cre/ntbpwatc.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntbpwatc.cre~ ~override~
 	SAY NAME1 @232
 	SAY NAME2 @232
 
-COPY ~ntotsc/base/cre/ntbrent1.cre~ ~override~
-	~ntotsc/base/cre/ntbrenta.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntbrent1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntbrenta.cre~ ~override~
 	SAY NAME1 @233
 	SAY NAME2 @233
 
-COPY ~ntotsc/base/cre/ntbrigan.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntbrigan.cre~ ~override~
 	SAY NAME1 @234
 	SAY NAME2 @234
 
-COPY ~ntotsc/base/cre/ntcholga.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntcholga.cre~ ~override~
 	SAY NAME1 @235
 	SAY NAME2 @235
 
-COPY ~ntotsc/base/cre/ntdeath1.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdeath1.cre~ ~override~
 	SAY NAME1 @236
 	SAY NAME2 @236
 	SAY 0xa4 @237
@@ -946,37 +864,37 @@ COPY ~ntotsc/base/cre/ntdeath1.cre~ ~override~
 	SAY 0x10c @241
 	SAY 0x1b8 @241
 
-COPY ~ntotsc/base/cre/ntdemon.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdemon.cre~ ~override~
 	SAY NAME1 @242
 	SAY NAME2 @242
 
-COPY ~ntotsc/base/cre/ntdoombe.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdoombe.cre~ ~override~
 	SAY NAME1 @244
 	SAY NAME2 @244
 
-COPY ~ntotsc/base/cre/ntdraagi.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdraagi.cre~ ~override~
 	SAY NAME1 @245
 	SAY NAME2 @245
 
 
-COPY ~ntotsc/base/cre/nteldod.cre~ ~override~
-	~ntotsc/base/cre/nteldod1.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nteldod.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/nteldod1.cre~ ~override~
 	SAY NAME1 @247
 	SAY NAME2 @247
   ADD_CRE_ITEM ~NTKEYPB5~ #0 #0 #0 ~UNSTEALABLE~ ~INV1~
 
 
 
-COPY ~ntotsc/base/cre/ntessila.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntessila.cre~ ~override~
 	SAY NAME1 @249
 	SAY NAME2 @249
 
-COPY ~ntotsc/base/cre/ntfalton.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntfalton.cre~ ~override~
 	SAY NAME1 @250
 	SAY NAME2 @250
 
-COPY ~ntotsc/base/cre/ntgghot1.cre~ ~override~
-	~ntotsc/base/cre/ntgghota.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntgghot1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntgghota.cre~ ~override~
 	SAY NAME1 @252
 	SAY NAME2 @252
 
@@ -991,15 +909,15 @@ ACTION_IF GAME_IS ~bgee~ THEN BEGIN
   ADD_CRE_ITEM ~SW2H11~ #0 #0 #0 ~UNDROPPABLE~ ~WEAPON1~ EQUIP
 END
 
-COPY ~ntotsc/base/cre/nthaebal.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthaebal.cre~ ~override~
 	SAY NAME1 @217
 	SAY NAME2 @217
 
-COPY ~ntotsc/base/cre/nthalfgu.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthalfgu.cre~ ~override~
 	SAY NAME1 @255
 	SAY NAME2 @255
 
-COPY ~ntotsc/base/cre/nthasdar.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthasdar.cre~ ~override~
 	SAY NAME1 @256
 	SAY NAME2 @256
 
@@ -1009,7 +927,7 @@ ACTION_IF GAME_IS ~bgee~ THEN BEGIN
   REMOVE_CRE_ITEM ~CLCK26~
 END
 
-COPY ~ntotsc/base/cre/nthasten.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthasten.cre~ ~override~
 	SAY NAME1 @257
 	SAY NAME2 @257
 	SAY 0xa4 @258
@@ -1022,74 +940,74 @@ COPY ~ntotsc/base/cre/nthasten.cre~ ~override~
 	SAY 0x114 @265
 	SAY 0x1a0 @266
 
-COPY ~ntotsc/base/cre/nthells1.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthells1.cre~ ~override~
 	SAY NAME1 @267
 	SAY NAME2 @267
 
-COPY ~ntotsc/base/cre/nthells2.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthells2.cre~ ~override~
 	SAY NAME1 @268
 	SAY NAME2 @268
 
-COPY ~ntotsc/base/cre/nthells3.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthells3.cre~ ~override~
 	SAY NAME1 @267
 	SAY NAME2 @267
 
-COPY ~ntotsc/base/cre/nthellsa.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthellsa.cre~ ~override~
 	SAY NAME1 @269
 	SAY NAME2 @269
 
-COPY ~ntotsc/base/cre/nthobgod.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nthobgod.cre~ ~override~
 	SAY NAME1 @270
 	SAY NAME2 @270
 
-COPY ~ntotsc/base/cre/ntindfi1.cre~ ~override~
-	~ntotsc/base/cre/ntindfi2.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntindfi1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntindfi2.cre~ ~override~
 	SAY NAME1 @271
 	SAY NAME2 @271
 	WRITE_ASCII 0x2cc ~ntindfi1~ #8
 
-COPY ~ntotsc/base/cre/ntindfig.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntindfig.cre~ ~override~
 	SAY NAME1 @271
 	SAY NAME2 @271
 
-COPY ~ntotsc/base/cre/ntkamira.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntkamira.cre~ ~override~
 	SAY NAME1 @272
 	SAY NAME2 @272
 
-COPY ~ntotsc/base/cre/ntkoldar.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntkoldar.cre~ ~override~
 	SAY NAME1 @277
 	SAY NAME2 @277
 
-COPY ~ntotsc/base/cre/ntkresti.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntkresti.cre~ ~override~
 	SAY NAME1 @278
 	SAY NAME2 @278
 
-COPY ~ntotsc/base/cre/ntlegian.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntlegian.cre~ ~override~
 	SAY NAME1 @280
 	SAY NAME2 @280
 
-COPY ~ntotsc/base/cre/ntlenore.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntlenore.cre~ ~override~
 	SAY NAME1 @281
 	SAY NAME2 @281
 
-COPY ~ntotsc/base/cre/ntlucret.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntlucret.cre~ ~override~
 	SAY NAME1 @303
 	SAY NAME2 @303
 
-COPY ~ntotsc/base/cre/ntmagnad.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntmagnad.cre~ ~override~
 	SAY NAME1 @304
 	SAY NAME2 @304
 
-COPY ~ntotsc/base/cre/ntmariel.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntmariel.cre~ ~override~
 	SAY NAME1 @305
 	SAY NAME2 @305
 
-COPY ~ntotsc/base/cre/ntmilea.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntmilea.cre~ ~override~
 	SAY NAME1 @306
 	SAY NAME2 @306
 
-COPY ~ntotsc/base/cre/ntmonkd2.cre~ ~override~
-	~ntotsc/base/cre/ntmonkde.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntmonkd2.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntmonkde.cre~ ~override~
 	SAY 0xa4 @308
 	SAY 0xec @309
 	SAY 0xf0 @310
@@ -1098,68 +1016,68 @@ COPY ~ntotsc/base/cre/ntmonkd2.cre~ ~override~
 	SAY 0x114 @312
 	SAY 0x118 @313
 
-COPY ~ntotsc/base/cre/ntmordor.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntmordor.cre~ ~override~
 	SAY NAME1 @314
 	SAY NAME2 @314
 
-COPY ~ntotsc/base/cre/ntnadali.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntnadali.cre~ ~override~
 	SAY NAME1 @315
 	SAY NAME2 @315
 
 
 
 
-COPY ~ntotsc/base/cre/ntolivia.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntolivia.cre~ ~override~
 	SAY 0xa4 @324
 	SAY 0xec @325
 	SAY 0xf0 @326
 	SAY 0x10c @324
 
-COPY ~ntotsc/base/cre/ntordol.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntordol.cre~ ~override~
 	SAY NAME1 @327
 	SAY NAME2 @327
 
-COPY ~ntotsc/base/cre/ntorpeho.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntorpeho.cre~ ~override~
 	SAY NAME1 @328
 	SAY NAME2 @328
 
-COPY ~ntotsc/base/cre/ntoupast.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntoupast.cre~ ~override~
 	SAY NAME1 @329
 	SAY NAME2 @329
 
-COPY ~ntotsc/base/cre/ntpandri.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntpandri.cre~ ~override~
 	SAY NAME1 @330
 	SAY NAME2 @330
 
-COPY ~ntotsc/base/cre/ntpaulia.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntpaulia.cre~ ~override~
 	SAY NAME1 @331
 	SAY NAME2 @331
 
-COPY ~ntotsc/base/cre/ntpooch.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntpooch.cre~ ~override~
 	SAY NAME1 @343
 	SAY NAME2 @343
 
-COPY ~ntotsc/base/cre/ntreedri.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntreedri.cre~ ~override~
 	SAY NAME1 @346
 	SAY NAME2 @346
 	WRITE_ASCII 0x248 ~ntreedri~ #8
 
 
 
-COPY ~ntotsc/base/cre/ntrudier.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntrudier.cre~ ~override~
 	SAY NAME1 @347
 	SAY NAME2 @347
 
-COPY ~ntotsc/base/cre/ntsalmi1.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntsalmi1.cre~ ~override~
 	SAY NAME1 @348
 	SAY NAME2 @348
   ADD_CRE_ITEM ~NTKEYPB6~ #0 #0 #0 ~UNSTEALABLE~ ~INV1~
 
-COPY ~ntotsc/base/cre/ntsalmi2.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntsalmi2.cre~ ~override~
 	SAY NAME1 @349
 	SAY NAME2 @349
 
-COPY ~ntotsc/base/cre/ntsarq.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntsarq.cre~ ~override~
 	SAY NAME1 @351
 	SAY NAME2 @351
 
@@ -1171,51 +1089,51 @@ ACTION_IF ((MOD_IS_INSTALLED ~DSotSC/DSotSC.TP2~ "0" AND FILE_EXISTS_IN_GAME ~DS
 END
 
 
-COPY ~ntotsc/base/cre/ntselani.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntselani.cre~ ~override~
 	SAY NAME1 @216
 	SAY NAME2 @216
 
-COPY ~ntotsc/base/cre/ntsirine.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntsirine.cre~ ~override~
 	SAY NAME1 @369
 	SAY NAME2 @369
 /*
-COPY ~ntotsc/base/cre/ntspider.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntspider.cre~ ~override~
 	SAY NAME1 @371
 	SAY NAME2 @371
 */
-COPY ~ntotsc/base/cre/ntszyper.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntszyper.cre~ ~override~
 	SAY NAME1 @376
 	SAY NAME2 @376
 
-COPY ~ntotsc/base/cre/nttamael.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nttamael.cre~ ~override~
 	SAY NAME1 @377
 	SAY NAME2 @377
 
-COPY ~ntotsc/base/cre/nttordi1.cre~ ~override~
-	~ntotsc/base/cre/nttordi2.cre~ ~override~
-	~ntotsc/base/cre/nttordio.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nttordi1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/nttordi2.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/nttordio.cre~ ~override~
 	SAY NAME1 @378
 	SAY NAME2 @378
 
 
 
-COPY ~ntotsc/base/cre/ntvaness.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntvaness.cre~ ~override~
 	SAY NAME1 @381
 	SAY NAME2 @381
 
-COPY ~ntotsc/base/cre/ntwinorm.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntwinorm.cre~ ~override~
 	SAY NAME1 @383
 	SAY NAME2 @383
 
-COPY ~ntotsc/base/cre/ntwyvern.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntwyvern.cre~ ~override~
 	SAY NAME1 @384
 	SAY NAME2 @384
 
-COPY ~ntotsc/base/cre/ntyness.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntyness.cre~ ~override~
 	SAY NAME1 @385
 	SAY NAME2 @385
 
-COPY ~ntotsc/base/cre/ntzombie.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntzombie.cre~ ~override~
 	SAY 0xc8 @387
 	SAY 0xcc @388
 	SAY 0xdc @389
@@ -1230,98 +1148,98 @@ COPY ~ntotsc/base/cre/ntzombie.cre~ ~override~
 ///////////////////////////////////////////////////////////
 /* cres needed for BG:EE */
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~DEADB01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/DEADB01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/DEADB01.cre~ ~override~
 	SAY NAME1 @506
 	SAY NAME2 @506
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~DEADB02.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/DEADB02.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/DEADB02.cre~ ~override~
 	SAY NAME1 @506
 	SAY NAME2 @506
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~DEADB03.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/DEADB03.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/DEADB03.cre~ ~override~
 	SAY NAME1 @506
 	SAY NAME2 @506
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~GHASTF01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/GHASTF01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/GHASTF01.cre~ ~override~
 	SAY NAME1 @509
 	SAY NAME2 @509
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~HGSAL01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/HGSAL01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/HGSAL01.cre~ ~override~
 	SAY NAME1 @510
 	SAY NAME2 @510
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORC01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ORC01.cre~ ~override~
 	SAY NAME1 @521
 	SAY NAME2 @521
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC02.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORC02.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ORC02.cre~ ~override~
 	SAY NAME1 @522
 	SAY NAME2 @522
 END
 
-COPY ~ntotsc/bgee/ORC04.cre~ ~override/ntorc04.cre~
+COPY ~%MOD_FOLDER%/bgee/ORC04.cre~ ~override/ntorc04.cre~
 	SAY NAME1 @524
 	SAY NAME2 @524
 	WRITE_BYTE 0x234 10 // set level
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC05.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORC05.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ORC05.cre~ ~override~
 	SAY NAME1 @525
 	SAY NAME2 @525
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC06.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORC06.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ORC06.cre~ ~override~
 	SAY NAME1 @525
 	SAY NAME2 @525
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~SHADOW01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/SHADOW01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/SHADOW01.cre~ ~override~
 	SAY NAME1 #23015 //Shadow Warrior
 	SAY NAME2 #23015 //Shadow Warrior
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~SKELAR01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/SKELAR01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/SKELAR01.cre~ ~override~
 	SAY NAME1 @511
 	SAY NAME2 @511
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~SKELWA01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/SKELWA01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/SKELWA01.cre~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~SPIDWR01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/SPIDWR01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/SPIDWR01.cre~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~VAMFLF01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/VAMFLF01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/VAMFLF01.cre~ ~override~
 	SAY NAME1 @512
 	SAY NAME2 @512
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ZOMBJU01.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ZOMBJU01.cre~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ZOMBJU01.cre~ ~override~
 END
 
 
 /* ~ORC03.cre~ */
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC03.cre~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORC03.cre~ ~override/ntorc03.cre~
+  COPY ~%MOD_FOLDER%/bgee/ORC03.cre~ ~override/ntorc03.cre~
 	SAY NAME1 @523
 	SAY NAME2 @523
 	WRITE_EVALUATED_ASCII 0x280 ~NTORC03~ #8   // Death variable
@@ -1397,7 +1315,7 @@ COPY_EXISTING ~wenric.cre~ ~override~
 
 // Copy cre files where no strings are needed (for BGT/EET)
 
-COPY ~ntotsc/base/cre/nostring~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nostring~ ~override~
 
 COPY_EXISTING ~ntavery.cre~ ~override~
   ADD_CRE_ITEM ~NTPBLET7~ #0 #0 #0 ~UNSTEALABLE~ ~INV1~
@@ -1430,33 +1348,33 @@ END
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~dsgbbow.itm~ BEGIN
 
   /* Wood Elves */
-  COMPILE EVALUATE_BUFFER ~ntotsc/dsotsc/orig_ressources/dsfeydo.d~
-  COMPILE EVALUATE_BUFFER ~ntotsc/dsotsc/orig_ressources/dsfeydo.baf~
-  COMPILE EVALUATE_BUFFER ~ntotsc/dsotsc/orig_ressources/dssylvan.baf~
+  COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/dsotsc/orig_ressources/dsfeydo.d~
+  COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/dsotsc/orig_ressources/dsfeydo.baf~
+  COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/dsotsc/orig_ressources/dssylvan.baf~
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dsgbbow.bam~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dsgbbow.bam~ ~override~
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dsgbbow.itm~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dsgbbow.itm~ ~override~
 	SAY NAME2 @1452
 	SAY DESC @1454
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dsfeydo.cre~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dsfeydo.cre~ ~override~
 	SAY NAME1 @2134
 	SAY NAME2 @2134
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dswelf1.cre~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dswelf1.cre~ ~override~
 	SAY NAME1 @2293
 	SAY NAME2 @2293
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dswelf1e.cre~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dswelf1e.cre~ ~override~
 	SAY NAME1 @2294
 	SAY NAME2 @2294
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dswelf2.cre~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dswelf2.cre~ ~override~
 	SAY NAME1 @2293
 	SAY NAME2 @2293
 
-  COPY ~ntotsc/dsotsc/orig_ressources/dswelf2e.cre~ ~override~
+  COPY ~%MOD_FOLDER%/dsotsc/orig_ressources/dswelf2e.cre~ ~override~
 	SAY NAME1 @2294
 	SAY NAME2 @2294
 END
@@ -1473,7 +1391,7 @@ END
 */
 
 /* add quest reply option to Fey'Doch's dialogue */
-COMPILE EVALUATE_BUFFER ~ntotsc/dsotsc/dsfeydo_ntotsc.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/dsotsc/dsfeydo_ntotsc.d~
 
 /* repair Fey'doch's dialogue and script */
 
@@ -1510,7 +1428,7 @@ COPY_EXISTING ~dsfeydo.bcs~ ~override~
 
 
 /* add random dialogue to Wood elves */
-COMPILE EVALUATE_BUFFER ~ntotsc/dsotsc/ntwdelf.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/dsotsc/ntwdelf.d~
 
 
 //Modify DSotSC creatures (always)
@@ -1551,14 +1469,14 @@ COPY_EXISTING ~DSWELF2E.cre~ ~override~
 /* copy ambients to override to prevent crashing */
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~AM0310.wav~ THEN BEGIN
-  COPY ~ntotsc/bgee/AM0310.wav~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/AM0310.wav~ ~override~
 END ELSE BEGIN
   COPY_EXISTING ~AM0310.wav~ ~override~
 END
 
 ACTION_IF GAME_IS ~bgee~ BEGIN
-//  COPY ~ntotsc/bgee/AM0310.wav~ ~override~
-  COPY ~ntotsc/bgee/AM0310B.wav~ ~override~
+//  COPY ~%MOD_FOLDER%/bgee/AM0310.wav~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/AM0310B.wav~ ~override~
 //  COPY_EXISTING ~AM_2101.wav~ ~override~
 //  COPY_EXISTING ~AM_2107.wav~ ~override~
 //  COPY_EXISTING ~AM_2107V.wav~ ~override~
@@ -1593,7 +1511,7 @@ ACTION_IF GAME_IS ~bgee~ BEGIN
   COPY_EXISTING ~BUTRFLY.BAM~ ~override~
   COPY_EXISTING ~CHIMSMK.BAM~ ~override~
 
-  COPY ~ntotsc/bgee/FIRE_2B.BAM~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/FIRE_2B.BAM~ ~override~
 
   COPY_EXISTING ~FLAME2L.BAM~ ~override~
   COPY_EXISTING ~FPIT1S.BAM~ ~override~
@@ -1708,41 +1626,41 @@ END
 
 // Install new areas
 
-COPY ~ntotsc/base/wed~ ~override~
+COPY ~%MOD_FOLDER%/base/wed~ ~override~
 
 ACTION_IF GAME_IS ~bgee~ BEGIN
-  COPY ~ntotsc/base/are/bgee/ar91pb.wed~ ~override~
-  COPY ~ntotsc/base/are/bgee/ar91pb.mos~ ~override~
-  COPY ~ntotsc/base/are/bgee/ar91pbht.bmp~ ~override~
-  COPY ~ntotsc/base/are/bgee/ar91pbsr.bmp~ ~override~
-  COPY ~ntotsc/base/are/bgee/ar91pblm.bmp~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/bgee/ar91pb.wed~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/bgee/ar91pb.mos~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/bgee/ar91pbht.bmp~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/bgee/ar91pbsr.bmp~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/bgee/ar91pblm.bmp~ ~override~
 END
 
-COPY ~ntotsc/base/are/%platform%/nostring~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/nostring~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
 
-COPY ~ntotsc/base/are/%platform%/ar01pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar01pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
 	SAY 0x2aa4 @429
 
-COPY ~ntotsc/base/are/%platform%/ar02pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar02pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
 	SAY 0x1ab4 @430
 
-COPY ~ntotsc/base/are/%platform%/ar10pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar10pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
 	SAY 0x3874 @431
 	SAY 0x3938 @518
 
-COPY ~ntotsc/base/are/%platform%/ar20pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar20pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
@@ -1754,7 +1672,7 @@ COPY ~ntotsc/base/are/%platform%/ar20pb.are~ ~override~
 	SAY 0x2e2c @502
 	SAY 0x2ef0 @502
 
-COPY ~ntotsc/base/are/%platform%/ar30pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar30pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
@@ -1770,19 +1688,19 @@ COPY ~ntotsc/base/are/%platform%/ar30pb.are~ ~override~
 	SAY 0x1880 @441
 	SAY 0x1944 @442
 
-COPY ~ntotsc/base/are/%platform%/ar34pb.are~ ~override~
+COPY ~%MOD_FOLDER%/base/are/%platform%/ar34pb.are~ ~override~
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
 	END
 	SAY 0x1df0 @443
 
 ACTION_IF GAME_IS ~bgt~ BEGIN
-  COPY ~ntotsc/base/are/%platform%/ar51pb.are~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/%platform%/ar51pb.are~ ~override~
 	SAY 0x11e8 @444
 END
 
 ACTION_IF GAME_IS ~eet bgee~ BEGIN
-  COPY ~ntotsc/base/are/%platform%/ar51pb.are~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/%platform%/ar51pb.are~ ~override~
 	SAY 0x1124 @444
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
@@ -1790,12 +1708,12 @@ ACTION_IF GAME_IS ~eet bgee~ BEGIN
 END
 
 ACTION_IF GAME_IS ~bgt~ BEGIN
-  COPY ~ntotsc/base/are/%platform%/ar60pb.are~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/%platform%/ar60pb.are~ ~override~
 	SAY 0x26b0 @445
 END
 
 ACTION_IF GAME_IS ~eet bgee~ BEGIN
-  COPY ~ntotsc/base/are/%platform%/ar60pb.are~ ~override~
+  COPY ~%MOD_FOLDER%/base/are/%platform%/ar60pb.are~ ~override~
 	SAY 0x3040 @445
 	PATCH_IF (GAME_IS ~eet~) BEGIN
 		WRITE_SHORT 0x48 THIS | IDS_OF_SYMBOL(~AREATYPE~ ~BG1AREA~)
@@ -1838,7 +1756,7 @@ COPY_EXISTING ~%FirewineBridge%.are~ ~override~
 		fj_structure_type   = region
 		fj_name             = Tran51pb
 		fj_destination_area = AR51PB
-		fj_destination_name = EVAL ~%FirewineBridge_entrance%~
+		fj_destination_name = ~%FirewineBridge_entrance%~
 		//fj_key_resref
 		//fj_reg_script
 		//fj_dialog
@@ -1931,7 +1849,7 @@ COPY_EXISTING ~%FireLeafForest%.are~ ~override~
 		fj_structure_type   = region
 		fj_name             = Tran80pb
 		fj_destination_area = AR80PB
-		fj_destination_name = EVAL ~%FireLeafForest_entrance%~
+		fj_destination_name = ~%FireLeafForest_entrance%~
 		//fj_key_resref
 		//fj_reg_script
 		//fj_dialog
@@ -1989,7 +1907,7 @@ COPY_EXISTING ~%Larswood%.are~ ~override~
 		fj_structure_type   = region
 		fj_name             = Tran9001
 		fj_destination_area = AR9001
-		fj_destination_name = EVAL ~%Larswood_entrance%~
+		fj_destination_name = ~%Larswood_entrance%~
 		//fj_key_resref
 		//fj_reg_script
 		//fj_dialog
@@ -2037,7 +1955,7 @@ COPY_EXISTING ~%Temple%.are~ ~override~
 		fj_structure_type   = region
 		fj_name             = Tran9305
 		fj_destination_area = AR9305
-		fj_destination_name = EVAL ~%Temple_entrance%~
+		fj_destination_name = ~%Temple_entrance%~
 		//fj_key_resref
 		//fj_reg_script
 		//fj_dialog
@@ -2138,39 +2056,39 @@ END
 
 // Install new scripts
 
-COMPILE EVALUATE_BUFFER ~ntotsc/base/baf~ USING ~NTotSC/language/%LANGUAGE%/baf.tra~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/base/baf~ USING ~NTotSC/language/%LANGUAGE%/baf.tra~
 
 //Modify existing scripts
 
 
-EXTEND_BOTTOM ~%FirewineBridge_BCS%.bcs~ ~ntotsc/modify/bcs/ar4500.baf~ EVALUATE_BUFFER
-USING ~ntotsc/language/%LANGUAGE%/baf.tra~
+EXTEND_BOTTOM ~%FirewineBridge_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar4500.baf~ EVALUATE_BUFFER
+USING ~%tra_loc%/%LANGUAGE%/baf.tra~
 
-EXTEND_BOTTOM ~%FireLeafForest_BCS%.bcs~ ~ntotsc/modify/bcs/ar5300.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%FireLeafForest_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar5300.baf~ EVALUATE_BUFFER
 
 
-EXTEND_BOTTOM ~%NEBaldursGate_BlushingMermaid_L1_BCS%.bcs~ ~ntotsc/modify/bcs/ar0114.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%NEBaldursGate_BCS%.bcs~ ~ntotsc/modify/bcs/ar0300.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%Farmlands_BCS%.bcs~ ~ntotsc/modify/bcs/ar0400.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%EBaldursGate_BCS%.bcs~ ~ntotsc/modify/bcs/ar0800.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%BaldursGateDocks_BCS%.bcs~ ~ntotsc/modify/bcs/ar1200.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%SEBaldursGate_BCS%.bcs~ ~ntotsc/modify/bcs/ar1300.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%NEBaldursGate_BlushingMermaid_L1_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0114.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%NEBaldursGate_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0300.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Farmlands_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0400.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%EBaldursGate_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0800.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%BaldursGateDocks_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1200.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%SEBaldursGate_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1300.baf~ EVALUATE_BUFFER
 
-EXTEND_BOTTOM ~%CloakwoodMines_Storehouse_BCS%.bcs~ ~ntotsc/modify/bcs/ar1808.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%CloakwoodMines_Storehouse_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1808.baf~ EVALUATE_BUFFER
 
-EXTEND_BOTTOM ~%Temple_BCS%.bcs~ ~ntotsc/modify/bcs/ar3400.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%Gullykin_Winery_L1_BCS%.bcs~ ~ntotsc/modify/bcs/ar4003.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%NBaldursGate_House6_L1_BCS%.bcs~ ~ntotsc/modify/bcs/ar0020.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%DurlagsTower_Cellar_BCS%.bcs~ ~ntotsc/modify/bcs/ar0501.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~%UlgothsBeard_BCS%.bcs~ ~ntotsc/modify/bcs/ar1000.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~%UlgothsBeard_BCS%.bcs~ ~ntotsc/modify/bcs/ar1002.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~%UlgothsBeard_DemonsChamber_BCS%.bcs~ ~ntotsc/modify/bcs/ar1002.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~tracea.bcs~ ~ntotsc/modify/bcs/tracea.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Temple_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar3400.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Gullykin_Winery_L1_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar4003.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%NBaldursGate_House6_L1_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0020.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%DurlagsTower_Cellar_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar0501.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~%UlgothsBeard_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1000.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~%UlgothsBeard_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1002.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~%UlgothsBeard_DemonsChamber_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1002.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~tracea.bcs~ ~%MOD_FOLDER%/modify/bcs/tracea.baf~ EVALUATE_BUFFER
 
 /* Differences in BGT / EE */
 
 ACTION_IF GAME_IS ~bgt~ BEGIN
-  EXTEND_BOTTOM ~%ArchaeologicalSite_Tomb_BCS%.bcs~ ~ntotsc/modify/bcs/ar4101.baf~ EVALUATE_BUFFER
+  EXTEND_BOTTOM ~%ArchaeologicalSite_Tomb_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar4101.baf~ EVALUATE_BUFFER
 
 <<<<<<<< ...inlined/charle_bgt.d
 ADD_TRANS_ACTION CHARLE BEGIN 21 END BEGIN END
@@ -2201,15 +2119,15 @@ END
 
 ACTION_IF ((MOD_IS_INSTALLED ~DSotSC/DSotSC.TP2~ "0" AND FILE_EXISTS_IN_GAME ~DSPOTN01.itm~) OR (MOD_IS_INSTALLED ~ds/setup-ds.TP2~ "0")) BEGIN
 	PRINT @528
-  EXTEND_BOTTOM ~ar02pb.bcs~ ~ntotsc/dsotsc/ar02pb_dsotsc.baf~ EVALUATE_BUFFER
-  EXTEND_BOTTOM ~ar25pb.bcs~ ~ntotsc/dsotsc/ar25pb_dsotsc.baf~ EVALUATE_BUFFER
-  EXTEND_BOTTOM ~ar61pb.bcs~ ~ntotsc/dsotsc/ar61pb_dsotsc.baf~ EVALUATE_BUFFER
-  EXTEND_BOTTOM ~ar9305.bcs~ ~ntotsc/dsotsc/ar9305_dsotsc.baf~ EVALUATE_BUFFER
+  EXTEND_BOTTOM ~ar02pb.bcs~ ~%MOD_FOLDER%/dsotsc/ar02pb_dsotsc.baf~ EVALUATE_BUFFER
+  EXTEND_BOTTOM ~ar25pb.bcs~ ~%MOD_FOLDER%/dsotsc/ar25pb_dsotsc.baf~ EVALUATE_BUFFER
+  EXTEND_BOTTOM ~ar61pb.bcs~ ~%MOD_FOLDER%/dsotsc/ar61pb_dsotsc.baf~ EVALUATE_BUFFER
+  EXTEND_BOTTOM ~ar9305.bcs~ ~%MOD_FOLDER%/dsotsc/ar9305_dsotsc.baf~ EVALUATE_BUFFER
 END
 
 /* BGT: Erase journal entries upon transition to BGII */
 ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-  EXTEND_TOP ~AR0602.bcs~ ~ntotsc/modify/bcs/AR0602.baf~ EVALUATE_BUFFER
+  EXTEND_TOP ~AR0602.bcs~ ~%MOD_FOLDER%/modify/bcs/AR0602.baf~ EVALUATE_BUFFER
 END
 
 
@@ -2217,39 +2135,39 @@ END
 /* scripts needed for BG:EE */
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~DRUID6A.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/DRUID6A.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/DRUID6A.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~DRUID10A.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/DRUID10A.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/DRUID10A.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~MAGE10A.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/MAGE10A.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/MAGE10A.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~MAGE10D.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/MAGE10D.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/MAGE10D.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~MAGE11.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/MAGE11.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/MAGE11.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~OARCH02.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/OARCH02.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/OARCH02.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORCWAR.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/ORCWAR.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/ORCWAR.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~PRIEST12.bcs~ THEN BEGIN
-  COPY ~ntotsc/bgee/PRIEST12.bcs~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/PRIEST12.bcs~ ~override~
 END
 
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~VAMPIR01.BCS~ THEN BEGIN
-  COPY ~ntotsc/bgee/VAMPIR01.BCS~ ~override~
+  COPY ~%MOD_FOLDER%/bgee/VAMPIR01.BCS~ ~override~
 END
 
 
@@ -2259,11 +2177,11 @@ END
 /////                                                  \\\\\
 
 //Install new dialogues
-COMPILE EVALUATE_BUFFER ~ntotsc/base/d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/base/d~
 
 
 //Modify existing dialogues
-COMPILE EVALUATE_BUFFER ~ntotsc/modify/dlg~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/modify/dlg~
 
 
 /////                                                  \\\\\
@@ -2275,21 +2193,21 @@ PRINT ~Updating Worldmap....~
 MKDIR ~Worldmap~
 ACTION_IF FILE_EXISTS ~Worldmap/map_mods_areas.tbl~ BEGIN
 	COPY ~Worldmap/map_mods_areas.tbl~ ~Worldmap~
-		APPEND_FILE ~ntotsc/Worldmap/areas.tbl~
+		APPEND_FILE ~%MOD_FOLDER%/Worldmap/areas.tbl~
 END ELSE BEGIN
-	COPY ~ntotsc/Worldmap/areas.tbl~ ~Worldmap/map_mods_areas.tbl~
+	COPY ~%MOD_FOLDER%/Worldmap/areas.tbl~ ~Worldmap/map_mods_areas.tbl~
 END
 ACTION_IF FILE_EXISTS ~Worldmap/map_mods_links.tbl~ BEGIN
 	COPY ~Worldmap/map_mods_links.tbl~ ~Worldmap~
-		APPEND_FILE ~ntotsc/Worldmap/%platform%/links.tbl~
+		APPEND_FILE ~%MOD_FOLDER%/Worldmap/%platform%/links.tbl~
 END ELSE BEGIN
-	COPY ~ntotsc/Worldmap/%platform%/links.tbl~ ~Worldmap/map_mods_links.tbl~
+	COPY ~%MOD_FOLDER%/Worldmap/%platform%/links.tbl~ ~Worldmap/map_mods_links.tbl~
 END
 ACTION_IF FILE_EXISTS ~Worldmap/map_mods_trans.tra~ BEGIN
 	COPY ~Worldmap/map_mods_trans.tra~ ~Worldmap~
-		APPEND_FILE ~ntotsc/language/%LANGUAGE%/worldmap.tra~
+		APPEND_FILE ~%tra_loc%/%LANGUAGE%/worldmap.tra~
 END ELSE BEGIN
-	COPY ~ntotsc/language/%LANGUAGE%/worldmap.tra~ ~Worldmap/map_mods_trans.tra~
+	COPY ~%tra_loc%/%LANGUAGE%/worldmap.tra~ ~Worldmap/map_mods_trans.tra~
 END
 
 ACTION_IF GAME_IS ~bgee~ BEGIN
@@ -2299,10 +2217,10 @@ ACTION_IF GAME_IS ~bgee~ BEGIN
 		verbose = 1
 		inclSv = 0
 		STR_VAR
-		path_to_areas = EVAL ~%MOD_FOLDER%/Worldmap/bgee/bgee_areas.tbl~
+		path_to_areas = ~%MOD_FOLDER%/Worldmap/bgee/bgee_areas.tbl~
 		path_to_areas_bp = ~%MOD_FOLDER%/Worldmap/areas.tbl~
-		path_to_links = EVAL ~%MOD_FOLDER%/Worldmap/bgee/bgee_links.tbl~
-		path_to_trans = EVAL ~%MOD_FOLDER%/language/%LANGUAGE%/worldmap.tra~
+		path_to_links = ~%MOD_FOLDER%/Worldmap/bgee/bgee_links.tbl~
+		path_to_trans = ~%MOD_FOLDER%/language/%LANGUAGE%/worldmap.tra~
 	END
 END
 
@@ -2313,10 +2231,10 @@ ACTION_IF GAME_IS ~eet~ BEGIN
 		verbose = 1
 		inclSv = 0
 		STR_VAR
-		path_to_areas = EVAL ~%MOD_FOLDER%/Worldmap/%platform%/areas.tbl~
-		path_to_areas_bp = EVAL ~%MOD_FOLDER%/Worldmap/areas.tbl~
-		path_to_links = EVAL ~%MOD_FOLDER%/Worldmap/%platform%/links.tbl~
-		path_to_trans = EVAL ~%MOD_FOLDER%/language/%LANGUAGE%/worldmap.tra~
+		path_to_areas = ~%MOD_FOLDER%/Worldmap/%platform%/areas.tbl~
+		path_to_areas_bp = ~%MOD_FOLDER%/Worldmap/areas.tbl~
+		path_to_links = ~%MOD_FOLDER%/Worldmap/%platform%/links.tbl~
+		path_to_trans = ~%MOD_FOLDER%/language/%LANGUAGE%/worldmap.tra~
 	END
 END
 
@@ -2324,21 +2242,21 @@ END
 ///// Decompressing and biffing                        \\\\\
 /////                                                  \\\\\
 
-MKDIR //~ntotsc/biff~
-	~ntotsc/language/%LANGUAGE%/ogg~
+MKDIR //~%MOD_FOLDER%/biff~
+	~%tra_loc%/%LANGUAGE%/ogg~
 
 ACTION_IF !GAME_IS ~bgee~ BEGIN
-	MOVE ~ntotsc/base/bmp/ar0400sr.bmp~ ~NTotSC/base/bmp/%Farmlands%sr.bmp~
-		~ntotsc/base/bmp/ar3400sr.bmp~ ~NTotSC/base/bmp/%Temple%sr.bmp~
+	MOVE ~%MOD_FOLDER%/base/bmp/ar0400sr.bmp~ ~NTotSC/base/bmp/%Farmlands%sr.bmp~
+		~%MOD_FOLDER%/base/bmp/ar3400sr.bmp~ ~NTotSC/base/bmp/%Temple%sr.bmp~
 END
 
 ACTION_IF ENGINE_IS ~bgee bg2ee~ BEGIN
-	COPY ~ntotsc/base/tis/ee~ ~override~ //~NTotSC/biff~
+	COPY ~%MOD_FOLDER%/base/tis/ee~ ~override~ //~NTotSC/biff~
 
         ACTION_IF GAME_IS ~bgee~ BEGIN
-		COPY ~ntotsc/base/are/bgee/a91pb00.PVRZ~ ~override~ //~NTotSC/biff~
-		COPY ~ntotsc/base/are/bgee/a91pb01.PVRZ~ ~override~ //~NTotSC/biff~
-//		COPY ~ntotsc/base/are/bgee/ar91pb.tis~ ~NTotSC/biff~
+		COPY ~%MOD_FOLDER%/base/are/bgee/a91pb00.PVRZ~ ~override~ //~NTotSC/biff~
+		COPY ~%MOD_FOLDER%/base/are/bgee/a91pb01.PVRZ~ ~override~ //~NTotSC/biff~
+//		COPY ~%MOD_FOLDER%/base/are/bgee/ar91pb.tis~ ~NTotSC/biff~
 	END
 
 END ELSE BEGIN
@@ -2346,9 +2264,9 @@ END ELSE BEGIN
 /*
 	LAF HANDLE_TILECONV
 		STR_VAR
-		input_path    = ~ntotsc/base/tis/old~
-		tileconv_path = EVAL ~ntotsc/bin/%WEIDU_OS%tile2ee%exe%~
-		output_path   = ~ntotsc/biff~
+		input_path    = ~%MOD_FOLDER%/base/tis/old~
+		tileconv_path = ~%MOD_FOLDER%/bin/%WEIDU_OS%tile2ee%exe%~
+		output_path   = ~%MOD_FOLDER%/biff~
 		RET
 		num_converted
 	END
@@ -2359,15 +2277,15 @@ END ELSE BEGIN
 
 	LAF HANDLE_TILESETS
 	  STR_VAR
-	    tiz_path = ~ntotsc/base/tis/old~
-	    tisunpack_path = ~ntotsc/bin/~
-	    output_path = ~override~ //~ntotsc/biff~
+	    tiz_path = ~%MOD_FOLDER%/base/tis/old~
+	    tisunpack_path = ~%MOD_FOLDER%/bin/~
+	    output_path = ~override~ //~%MOD_FOLDER%/biff~
 	END
 
 /* Deactivated and switched back to HANDLE_TILESETS above - I have no idea what this does and it doesn't remove the .tis files from the biff folder upon deinstallation of the mod
 
 	OUTER_SPRINT ~tisunpack~ ~ntotsc%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%tisunpack%exe%~
-	ACTION_BASH_FOR ~ntotsc/base/tis/old~ ~.+\.tiz$~ BEGIN
+	ACTION_BASH_FOR ~%MOD_FOLDER%/base/tis/old~ ~.+\.tiz$~ BEGIN
 		AT_NOW ~%tisunpack% -s -f -o "NTotSC%os_slash%biff%os_slash%%BASH_FOR_RES%.tis" "NTotSC%os_slash%base%os_slash%tis%os_slash%old%os_slash%%BASH_FOR_RES%.tiz" %bash_debug%~ EXACT
 
 	END
@@ -2376,10 +2294,10 @@ END
 
 LAF HANDLE_AUDIO
 	STR_VAR
-    audio_path = ~ntotsc/base/ogg~
-    oggdec_path = ~ntotsc/bin/win32~
-    sox_path = ~ntotsc/bin/osx~
-	output_path = ~override~ //~ntotsc/biff~
+    audio_path = ~%MOD_FOLDER%/base/ogg~
+    oggdec_path = ~%MOD_FOLDER%/bin/win32~
+    sox_path = ~%MOD_FOLDER%/bin/osx~
+	output_path = ~override~ //~%MOD_FOLDER%/biff~
 END
 
 
@@ -2389,20 +2307,20 @@ also for BGT: for Megamod installs, player can use General Biffing if wanted.
 PRINT ~Biffing files....~
 
 MAKE_BIFF ~ntotsc~ BEGIN
-	~ntotsc/biff~ ~^.*$~
-	~ntotsc/base/bam~ ~^.*$~
-	~ntotsc/base/bmp~ ~^.*$~
-	~ntotsc/base/mos/%engine%~ ~^.*$~
-	~ntotsc/base/portraits/%engine%~ ~^.*$~
-	~ntotsc/base/portraits/l~ ~^.*$~
+	~%MOD_FOLDER%/biff~ ~^.*$~
+	~%MOD_FOLDER%/base/bam~ ~^.*$~
+	~%MOD_FOLDER%/base/bmp~ ~^.*$~
+	~%MOD_FOLDER%/base/mos/%engine%~ ~^.*$~
+	~%MOD_FOLDER%/base/portraits/%engine%~ ~^.*$~
+	~%MOD_FOLDER%/base/portraits/l~ ~^.*$~
 END
 */
 
 
-//COPY	~ntotsc/biff~ ~override~
-COPY	~ntotsc/base/bam~ ~override~
-COPY	~ntotsc/base/bmp~ ~override~
-COPY	~ntotsc/base/mos/%engine%~ ~override~
+//COPY	~%MOD_FOLDER%/biff~ ~override~
+COPY	~%MOD_FOLDER%/base/bam~ ~override~
+COPY	~%MOD_FOLDER%/base/bmp~ ~override~
+COPY	~%MOD_FOLDER%/base/mos/%engine%~ ~override~
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -2416,21 +2334,21 @@ COPY	~ntotsc/base/mos/%engine%~ ~override~
 BEGIN @55133 /* ~Spawn less Monsters depending on Game Difficulty~ */
 GROUP @569	/* ~Nerfs~ */
 DESIGNATED 1 LABEL ~NTotSC_LessMonsters~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntindfig_lm.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/nthumbab_lm.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/ntindfig_lm.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/nthumbab_lm.d~
 
-EXTEND_BOTTOM ~ar02pb.bcs~ ~ntotsc/less_monsters/ar02pb_lm.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~ar61pb.bcs~ ~ntotsc/less_monsters/ar61pb_lm.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~ntindfi1.bcs~ ~ntotsc/less_monsters/ntindfi1_lm.baf~ EVALUATE_BUFFER
-EXTEND_TOP ~ntindfi2.bcs~ ~ntotsc/less_monsters/ntdest04.baf~ EVALUATE_BUFFER
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/nthellsb.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntdest01.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntdest02.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntdest03.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntdest04.baf~
+EXTEND_BOTTOM ~ar02pb.bcs~ ~%MOD_FOLDER%/less_monsters/ar02pb_lm.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~ar61pb.bcs~ ~%MOD_FOLDER%/less_monsters/ar61pb_lm.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~ntindfi1.bcs~ ~%MOD_FOLDER%/less_monsters/ntindfi1_lm.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~ntindfi2.bcs~ ~%MOD_FOLDER%/less_monsters/ntdest04.baf~ EVALUATE_BUFFER
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/nthellsb.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/ntdest01.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/ntdest02.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/ntdest03.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/less_monsters/ntdest04.baf~
 
 
 
@@ -2445,28 +2363,28 @@ COMPILE EVALUATE_BUFFER ~ntotsc/less_monsters/ntdest04.baf~
 BEGIN @533 /* ~Keelor the Dwarf~ */
 GROUP @566 /* ~Quests and Encounters~*/
 DESIGNATED 2 LABEL ~NTotSC_KeelortheDwarf~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 FORBID_FILE ~override/JA#KEELO.CRE~ @532
 
 /* Keelor The Dwarf */
-ADD_JOURNAL @10027 @10028 @10029 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10027 @10028 @10029 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
-COMPILE EVALUATE_BUFFER ~ntotsc/keelor/ntkeelor.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/keelor/ntkeelor.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/keelor/ntkeelor.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/keelor/ntkeelor.baf~
 
-COMPILE EVALUATE_BUFFER ~ntotsc/keelor/ntnasha.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/keelor/ntnasha.d~
 
-COPY ~ntotsc/keelor/ntkeelor.cre~ ~override~
+COPY ~%MOD_FOLDER%/keelor/ntkeelor.cre~ ~override~
 	SAY NAME1 #15625 //@273
 	SAY NAME2 #15625 //@273
 
-COPY ~ntotsc/keelor/NTNASHA.CRE~ ~override~
+COPY ~%MOD_FOLDER%/keelor/NTNASHA.CRE~ ~override~
 SAY NAME1 #15671 //~Nasha~ (string ref is true for BGT and BG:EE)
 SAY NAME2 #15671 //~Nasha~ (string ref is true for BGT and BG:EE)
 
-EXTEND_TOP ~AR01PB.bcs~ ~ntotsc/keelor/ar01pb_keelor.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~AR01PB.bcs~ ~%MOD_FOLDER%/keelor/ar01pb_keelor.baf~ EVALUATE_BUFFER
 
-EXTEND_BOTTOM ~%BaldursGateDocks_WaterQueensHouse%.bcs~ ~ntotsc/keelor/ar0609.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%BaldursGateDocks_WaterQueensHouse%.bcs~ ~%MOD_FOLDER%/keelor/ar0609.baf~ EVALUATE_BUFFER
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -2480,25 +2398,25 @@ EXTEND_BOTTOM ~%BaldursGateDocks_WaterQueensHouse%.bcs~ ~ntotsc/keelor/ar0609.ba
 BEGIN @534 /* ~Llindellyn's Lucky Arrow~ */
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 3 LABEL ~NTotSC_LlindellynsLuckyArrow~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 FORBID_FILE ~override/JA#LLIND.CRE~ @532
 
 
 /* Llindellyn's Lucky Arrow */
-ADD_JOURNAL @10034 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL @10034 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
-COPY ~ntotsc/llindellyn/ntarrow3.itm~ ~override~
+COPY ~%MOD_FOLDER%/llindellyn/ntarrow3.itm~ ~override~
 	SAY NAME2 @7
 	SAY DESC @8
 
-COMPILE EVALUATE_BUFFER ~ntotsc/llindellyn/ntllinde.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/llindellyn/ntllinde.d~
 
-COPY ~ntotsc/llindellyn/ntbearpo.cre~ ~override~
-COPY ~ntotsc/llindellyn/ntllinde.cre~ ~override~
+COPY ~%MOD_FOLDER%/llindellyn/ntbearpo.cre~ ~override~
+COPY ~%MOD_FOLDER%/llindellyn/ntllinde.cre~ ~override~
 	SAY NAME1 @302
 	SAY NAME2 @302
 
-EXTEND_TOP ~AR40PB.bcs~ ~ntotsc/llindellyn/ar40pb_llindellyn.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~AR40PB.bcs~ ~%MOD_FOLDER%/llindellyn/ar40pb_llindellyn.baf~ EVALUATE_BUFFER
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -2513,37 +2431,37 @@ BEGIN @535 /* ~Nim Furlwing's Hunting Hounds~ */
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 4 LABEL ~NTotSC_NimFurlwing~
 
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 FORBID_FILE ~override/ubnimfur.CRE~ @532
 FORBID_FILE ~override/JA#NIMFU.CRE~ @532
 
 /* @10047: Nim Furlwing's Hunting Hounds */
-ADD_JOURNAL TITLE (@10047) @10042 @10043 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10047) @10042 @10043 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
-COPY ~ntotsc/nimfurlwing/ntscrlnf.itm~ ~override~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntscrlnf.itm~ ~override~
 
-COMPILE EVALUATE_BUFFER ~ntotsc/nimfurlwing/ntnimfur.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/nimfurlwing/ntdogfun.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/nimfurlwing/ntdogfu2.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/nimfurlwing/ntwolfva.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/nimfurlwing/ntnimfur.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/nimfurlwing/ntdogfun.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/nimfurlwing/ntdogfu2.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/nimfurlwing/ntwolfva.baf~
 
 
-COPY ~ntotsc/nimfurlwing/ntdogfun.cre~ ~override~
-COPY ~ntotsc/nimfurlwing/ntdogfun.cre~ ~override/ntdogfu1.cre~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntdogfun.cre~ ~override~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntdogfun.cre~ ~override/ntdogfu1.cre~
 	WRITE_ASCII DEATHVAR ~ntdogfu1~ #32
-COPY ~ntotsc/nimfurlwing/ntdogfun.cre~ ~override/ntdogfu2.cre~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntdogfun.cre~ ~override/ntdogfu2.cre~
 	WRITE_ASCII DEATHVAR ~ntdogfu2~ #32
 
-COPY ~ntotsc/nimfurlwing/ntwolfva.cre~ ~override~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntwolfva.cre~ ~override~
 
-COPY ~ntotsc/nimfurlwing/ntnimfur.cre~ ~override~
+COPY ~%MOD_FOLDER%/nimfurlwing/ntnimfur.cre~ ~override~
 	SAY 0xa4 @318
 	SAY 0xec @319
 	SAY 0xf0 @320
 	SAY 0x10c @318
 
 
-EXTEND_TOP ~AR60PB.bcs~ ~ntotsc/nimfurlwing/ar60pb_nimfur.baf~ EVALUATE_BUFFER
+EXTEND_TOP ~AR60PB.bcs~ ~%MOD_FOLDER%/nimfurlwing/ar60pb_nimfur.baf~ EVALUATE_BUFFER
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -2556,27 +2474,27 @@ EXTEND_TOP ~AR60PB.bcs~ ~ntotsc/nimfurlwing/ar60pb_nimfur.baf~ EVALUATE_BUFFER
 BEGIN @536 /* ~Pilar and Gheldehar~ */
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 5 LABEL ~NTotSC_PilarandGeldehar~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 FORBID_FILE ~override/JA#GHELD.CRE~ @532
 
 /* @10056 : Pilar and Gheldehar */
-ADD_JOURNAL TITLE (@10056) @10014 @10055 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10056) @10014 @10055 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
-COPY ~ntotsc/pilargheldehar/ntring03.itm~ ~override~
+COPY ~%MOD_FOLDER%/pilargheldehar/ntring03.itm~ ~override~
 	SAY NAME2 @503
 
 COPY_EXISTING ~BOOT06.itm~ ~override/ntboot02.itm~
 	SAY NAME2 @504
 
 
-COMPILE EVALUATE_BUFFER ~ntotsc/pilargheldehar/ntghelde.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/pilargheldehar/ntpilar.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/pilargheldehar/ntghelde.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/pilargheldehar/ntpilar.d~
 
-COPY ~ntotsc/pilargheldehar/ntghelde.cre~ ~override~
-COPY ~ntotsc/pilargheldehar/ntpilar.cre~ ~override~
+COPY ~%MOD_FOLDER%/pilargheldehar/ntghelde.cre~ ~override~
+COPY ~%MOD_FOLDER%/pilargheldehar/ntpilar.cre~ ~override~
 
-EXTEND_BOTTOM ~%FriendlyArmInn_BCS%.bcs~ ~ntotsc/pilargheldehar/ar2300.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%NWBaldursGate_BCS%.bcs~ ~ntotsc/pilargheldehar/ar0100.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%FriendlyArmInn_BCS%.bcs~ ~%MOD_FOLDER%/pilargheldehar/ar2300.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%NWBaldursGate_BCS%.bcs~ ~%MOD_FOLDER%/pilargheldehar/ar0100.baf~ EVALUATE_BUFFER
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -2589,18 +2507,18 @@ EXTEND_BOTTOM ~%NWBaldursGate_BCS%.bcs~ ~ntotsc/pilargheldehar/ar0100.baf~ EVALU
 BEGIN @537 /* ~Svlast's Torment~ */
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 6 LABEL ~NTotSC_SvlastsTorment~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 FORBID_FILE ~override/UBSVLAST.CRE~ @532
 FORBID_FILE ~override/JA#SVLST.CRE~ @532
 
 /* @10066: Svlast's Torment */
-ADD_JOURNAL TITLE (@10066) @10064 @10065 @10100 @10101 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10066) @10064 @10065 @10100 @10101 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
-COMPILE EVALUATE_BUFFER ~ntotsc/svlast/ntsvlast.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/svlast/ntsvlast.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/svlast/ntsvlast.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/svlast/ntsvlast.baf~
 
 
-COPY ~ntotsc/svlast/ntzombju.cre~ ~override~
+COPY ~%MOD_FOLDER%/svlast/ntzombju.cre~ ~override~
 	SAY 0xc8 @387
 	SAY 0xcc @388
 	SAY 0xdc @389
@@ -2609,13 +2527,13 @@ COPY ~ntotsc/svlast/ntzombju.cre~ ~override~
 	SAY 0xf0 @392
 	SAY 0x10c @393
 	SAY 0x110 @394
-COPY ~ntotsc/svlast/ntsvlast.cre~ ~override~
+COPY ~%MOD_FOLDER%/svlast/ntsvlast.cre~ ~override~
 	SAY 0xa4 @373
 	SAY 0xec @374
 	SAY 0xf0 @375
 	SAY 0x10c @373
 
-EXTEND_BOTTOM ~%FirewineBridge_BCS%.bcs~ ~ntotsc/svlast/ar4500_svlast.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%FirewineBridge_BCS%.bcs~ ~%MOD_FOLDER%/svlast/ar4500_svlast.baf~ EVALUATE_BUFFER
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -2628,10 +2546,10 @@ EXTEND_BOTTOM ~%FirewineBridge_BCS%.bcs~ ~ntotsc/svlast/ar4500_svlast.baf~ EVALU
 BEGIN @538 /* ~Will O'Hara NPC~ */
 GROUP @570 /* ~NPC~ */
 DESIGNATED 7 LABEL ~NTotSC_WillNPC~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 /* @10081   = ~Will O'Hara~ */
-ADD_JOURNAL TITLE (@10081) @10000 @10079 @10080 USING ~ntotsc/language/%LANGUAGE%/journal.tra~
+ADD_JOURNAL TITLE (@10081) @10000 @10079 @10080 USING ~%tra_loc%/%LANGUAGE%/journal.tra~
 
 APPEND ~interdia.2da~ ~WILL BWILL NONE~
 COPY_EXISTING ~interdia.2da~ ~override~
@@ -2643,37 +2561,37 @@ COPY_EXISTING ~pdialog.2da~ ~override~
 	PRETTY_PRINT_2DA
 BUT_ONLY
 
-COPY ~ntotsc/will/ntblun06.itm~ ~override~
+COPY ~%MOD_FOLDER%/will/ntblun06.itm~ ~override~
 	SAY NAME2 @25
 	SAY DESC @26
 
-COPY ~ntotsc/will/ntblun07.itm~ ~override~
+COPY ~%MOD_FOLDER%/will/ntblun07.itm~ ~override~
 	SAY NAME2 @25
 	SAY DESC @27
 
-COPY ~ntotsc/will/ntleat02.itm~ ~override~
+COPY ~%MOD_FOLDER%/will/ntleat02.itm~ ~override~
 	SAY NAME2 @100
 	SAY DESC @101
 
-COPY ~ntotsc/will/ntleat03.itm~ ~override~
+COPY ~%MOD_FOLDER%/will/ntleat03.itm~ ~override~
 	SAY NAME2 @100
 	SAY DESC @102
 
-COPY ~ntotsc/will/ntring01.itm~ ~override~
+COPY ~%MOD_FOLDER%/will/ntring01.itm~ ~override~
 	SAY NAME2 @151
 	SAY DESC @153
 
-COMPILE EVALUATE_BUFFER ~ntotsc/will/will.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/willj.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/willp.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/bart5.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/golinv.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/keldda.d~
-COMPILE EVALUATE_BUFFER ~ntotsc/will/taerom.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/will.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/willj.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/willp.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/bart5.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/golinv.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/keldda.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/will/taerom.d~
 
-COPY ~ntotsc/will/ntwill2.cre~ ~override~
-	~ntotsc/will/ntwill4.cre~ ~override~
-	~ntotsc/will/ntwill6.cre~ ~override~
+COPY ~%MOD_FOLDER%/will/ntwill2.cre~ ~override~
+	~%MOD_FOLDER%/will/ntwill4.cre~ ~override~
+	~%MOD_FOLDER%/will/ntwill6.cre~ ~override~
 	SAY NAME1 @395
 	SAY NAME2 @395
 	SAY 0xa4 @396 /* ~Will Scarlet, at your service!~ [WILL01] */
@@ -2722,12 +2640,12 @@ END
 COPY_EXISTING ~golinv.cre~ ~override~
 	WRITE_ASCII SCRIPT_OVERRIDE ~INITGOLV~ #8 // Override Script was INITDLG
 
-EXTEND_BOTTOM ~INITGOLV.BCS~ ~ntotsc/will/NTGOLINV.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~INITGOLV.BCS~ ~%MOD_FOLDER%/will/NTGOLINV.baf~ EVALUATE_BUFFER
 
-EXTEND_BOTTOM ~%Beregost_BCS%.bcs~ ~ntotsc/will/ar3300.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Beregost_BCS%.bcs~ ~%MOD_FOLDER%/will/ar3300.baf~ EVALUATE_BUFFER
 
-COPY	~ntotsc/base/portraits/%engine%~ ~override~
-COPY	~ntotsc/base/portraits/l~ ~override~
+COPY	~%MOD_FOLDER%/base/portraits/%engine%~ ~override~
+COPY	~%MOD_FOLDER%/base/portraits/l~ ~override~
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -2738,12 +2656,12 @@ COPY	~ntotsc/base/portraits/l~ ~override~
 BEGIN @553 /* Install soundset */
 GROUP @570 /* ~NPC~ */
 DESIGNATED 8 LABEL ~NTotSC_WillSoundset~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 7 @552 /* Requires 'Will O'Hara' component */
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 7 @552 /* Requires 'Will O'Hara' component */
 
 	// Apply English soundset if language-specific sounds are not available
-	ACTION_BASH_FOR ~ntotsc/language/english/ogg~ ~^will.+\.ogg$~ BEGIN // Only files in "will*.ogg" pattern
-		ACTION_IF NOT FILE_EXISTS ~ntotsc/language/%LANGUAGE%/ogg/%BASH_FOR_FILE%~ BEGIN
-			COPY ~%BASH_FOR_FILESPEC%~ ~ntotsc/language/%LANGUAGE%/ogg~
+	ACTION_BASH_FOR ~%tra_loc%/english/ogg~ ~^will.+\.ogg$~ BEGIN // Only files in "will*.ogg" pattern
+		ACTION_IF NOT FILE_EXISTS ~%tra_loc%/%LANGUAGE%/ogg/%BASH_FOR_FILE%~ BEGIN
+			COPY ~%BASH_FOR_FILESPEC%~ ~%tra_loc%/%LANGUAGE%/ogg~
 		END
 	END
 
@@ -2751,9 +2669,9 @@ REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 7 @552 /* Requires 'Will O'Hara' component
 	// or all component-ralated sounds should be copied here to base/ogg directory and then installed
 	LAF HANDLE_AUDIO
 		STR_VAR
-		audio_path = EVAL ~ntotsc/language/%LANGUAGE%/ogg~
-		oggdec_path = ~ntotsc/bin/win32~
-		sox_path = ~ntotsc/bin/osx~
+		audio_path = ~%MOD_FOLDER%language/%LANGUAGE%/ogg~
+		oggdec_path = ~%MOD_FOLDER%/bin/win32~
+		sox_path = ~%MOD_FOLDER%/bin/osx~
 		output_path = ~override~
 	END
 
@@ -2767,51 +2685,51 @@ REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 7 @552 /* Requires 'Will O'Hara' component
 BEGIN @540 /* ~Fighting Encounters~ */
 GROUP @564	/* ~Tactical Challenges~ */
 DESIGNATED 9 LABEL ~NTotSC_FightingEncounters~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 
 
 /* Additional comrades to Lamalha (AR5000 Valley of the Tombs) */
 
-COPY ~ntotsc/base/cre/ntelka.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntelka.cre~ ~override~
 	SAY NAME1 @248
 	SAY NAME2 @248
 
-COPY ~ntotsc/base/cre/ntnatalk.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntnatalk.cre~ ~override~
 	SAY NAME1 @316
 	SAY NAME2 @316
 
-EXTEND_BOTTOM ~%ValleyoftheTombs_BCS%.bcs~ ~ntotsc/modify/bcs/ar5000.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%ValleyoftheTombs_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar5000.baf~ EVALUATE_BUFFER
 
 
 /* Boy and his "parents" in Beregost House */
 
-COPY ~ntotsc/base/cre/ntogreda.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntogreda.cre~ ~override~
 	SAY NAME1 @321
 	SAY NAME2 @321
 
-COPY ~ntotsc/base/cre/ntogremu.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntogremu.cre~ ~override~
 	SAY NAME1 @322
 	SAY NAME2 @322
 
-COPY ~ntotsc/fightingencounter/ntboybe1.cre~ ~override~
-COMPILE EVALUATE_BUFFER ~ntotsc/fightingencounter/ntboybe1.d~
+COPY ~%MOD_FOLDER%/fightingencounter/ntboybe1.cre~ ~override~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/fightingencounter/ntboybe1.d~
 
-EXTEND_BOTTOM ~%Beregost_House04_L1_BCS%.bcs~ ~ntotsc/modify/bcs/ar3345.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%Beregost_House04_L2_BCS%.bcs~ ~ntotsc/modify/bcs/ar3346.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Beregost_House04_L1_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar3345.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Beregost_House04_L2_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar3346.baf~ EVALUATE_BUFFER
 
 
 /* Six sisters in Jovial Juggler L1 */
 
-COPY ~ntotsc/base/cre/ntroach.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntroach.cre~ ~override~
 	SAY NAME1 @271
 	SAY NAME2 @271
 
 
-COMPILE EVALUATE_BUFFER ~ntotsc/fightingencounter/ntdeathk.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/fightingencounter/ntdeathk.d~
 
-COPY ~ntotsc/base/cre/ntdeath1.cre~ ~override~
-	~ntotsc/base/cre/ntdeathk.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdeath1.cre~ ~override~
+	~%MOD_FOLDER%/base/cre/ntdeathk.cre~ ~override~
 	SAY NAME1 @236
 	SAY NAME2 @236
 	SAY 0xa4 @237
@@ -2821,47 +2739,47 @@ COPY ~ntotsc/base/cre/ntdeath1.cre~ ~override~
 	SAY 0x10c @241
 	SAY 0x1b8 @241
 
-COMPILE EVALUATE_BUFFER ~ntotsc/fightingencounter/ntdxter.baf~
-COMPILE EVALUATE_BUFFER ~ntotsc/fightingencounter/ntdextpb.d~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/fightingencounter/ntdxter.baf~
+COMPILE EVALUATE_BUFFER ~%MOD_FOLDER%/fightingencounter/ntdextpb.d~
 
-COPY ~ntotsc/base/itm/ntmiotpb.itm~ ~override~
+COPY ~%MOD_FOLDER%/base/itm/ntmiotpb.itm~ ~override~
 	SAY NAME2 @112
 	SAY DESC @114
 
-COPY ~ntotsc/base/cre/ntdxter.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntdxter.cre~ ~override~
 	SAY NAME1 @246
 	SAY NAME2 @246
 
-EXTEND_BOTTOM ~%Beregost_JovialJuggler_L2R_BCS%.bcs~ ~ntotsc/modify/bcs/ar3306.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Beregost_JovialJuggler_L2R_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar3306.baf~ EVALUATE_BUFFER
 
 /* Ogre Magii in Peldvale */
 
-COPY ~ntotsc/fightingencounter/ntforeog.cre~ ~override~
+COPY ~%MOD_FOLDER%/fightingencounter/ntforeog.cre~ ~override~
 
-EXTEND_BOTTOM ~%Peldvale_BCS%.bcs~ ~ntotsc/modify/bcs/ar2400.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%Peldvale_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar2400.baf~ EVALUATE_BUFFER
 
 
 /* Officer Tytus and Black Talon Fighters in Cloakwood & Cloakwood Mine */
 
-COPY ~ntotsc/base/cre/nttytus.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/nttytus.cre~ ~override~
 	SAY NAME1 @379
 	SAY NAME2 @379
 
-EXTEND_BOTTOM ~%CloakwoodMines_MineShed_BCS%.bcs~ ~ntotsc/modify/bcs/ar1809.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%CloakwoodMines_MineShed_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1809.baf~ EVALUATE_BUFFER
 
 
-COPY ~ntotsc/base/cre/btelite.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/btelite.cre~ ~override~
 	SAY NAME1 @221
 	SAY NAME2 @221
 
-EXTEND_BOTTOM ~%CloakwoodWyverns_BCS%.bcs~ ~ntotsc/modify/bcs/ar1700.baf~ EVALUATE_BUFFER
-EXTEND_BOTTOM ~%CloakwoodMines_BCS%.bcs~ ~ntotsc/modify/bcs/ar1800.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%CloakwoodWyverns_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1700.baf~ EVALUATE_BUFFER
+EXTEND_BOTTOM ~%CloakwoodMines_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1800.baf~ EVALUATE_BUFFER
 
 
 BEGIN @565	/* ~Improved Lesser Fiends */
 GROUP @564	/* ~Tactical Challenges~ */
 DESIGNATED 10 LABEL ~NTotSC_TacticalChallengesFiends~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 INCLUDE ~%MOD_FOLDER%/tactical/setup_fiends.tpa~
 
@@ -2869,7 +2787,7 @@ INCLUDE ~%MOD_FOLDER%/tactical/setup_fiends.tpa~
 BEGIN @567	/* ~Improved Haeball */
 GROUP @564	/* ~Tactical Challenges~ */
 DESIGNATED 11 LABEL ~NTotSC_TacticalChallengesHaeball~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 INCLUDE ~%MOD_FOLDER%/tactical/setup_haeball.tpa~
 
@@ -2877,7 +2795,7 @@ INCLUDE ~%MOD_FOLDER%/tactical/setup_haeball.tpa~
 BEGIN @568	/* ~Improved General Ghotal */
 GROUP @564	/* ~Tactical Challenges~ */
 DESIGNATED 12 LABEL ~NTotSC_TacticalChallengesGhotal~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 INCLUDE ~%MOD_FOLDER%/tactical/setup_ghotal.tpa~
 
@@ -2886,7 +2804,7 @@ BEGIN @572   /* ~Remove Cloaks from generic Orc Priests~ */
 SUBCOMPONENT @571 /* ~Reduce Number of Shaman Cloaks~ */
 GROUP @569	/* ~Nerfs~ */
 DESIGNATED 13 LABEL ~NTotSC_RemoveShamanCloaks_Completely~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 COPY_EXISTING ~NTORC03.cre~ ~override~
 	REMOVE_CRE_ITEM ~NTROBE02~
@@ -2896,7 +2814,7 @@ BEGIN @573 /* ~Make Cloaks Undroppable~	*/
 SUBCOMPONENT @571 /* ~Reduce Number of Shaman Cloaks~ */
 GROUP @569	/* ~Nerfs~ */
 DESIGNATED 14 LABEL ~NTotSC_RemoveShamanCloaks_Undroppable~
-REQUIRE_COMPONENT ~ntotsc/NTotSC.tp2~ 0 @531
+REQUIRE_COMPONENT ~%MOD_FOLDER%/NTotSC.tp2~ 0 @531
 
 COPY_EXISTING ~NTORC03.cre~ ~override~
   LPF ADD_CRE_ITEM_FLAGS STR_VAR item_to_change=NTROBE02 flags=UNDROPPABLE END
@@ -2908,7 +2826,7 @@ SUBCOMPONENT @55141
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 15 LABEL ~NTotSC_SpellScrolls_Revised~
 
-INCLUDE ~ntotsc/spells/setup_spells_revised.tpa~
+INCLUDE ~%MOD_FOLDER%/spells/setup_spells_revised.tpa~
 
 
 BEGIN @55143
@@ -2916,4 +2834,4 @@ SUBCOMPONENT @55141
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 16 LABEL ~NTotSC_SpellScrolls_Original~
 
-INCLUDE ~ntotsc/spells/setup_spells_original.tpa~
+INCLUDE ~%MOD_FOLDER%/spells/setup_spells_original.tpa~
