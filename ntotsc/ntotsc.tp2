@@ -19,13 +19,6 @@ AUTO_EVAL_STRINGS
 /////                                                  \\\\\
 
 ALWAYS
-  OUTER_SPRINT external_loc "weidu_external"
-  OUTER_SPRINT tra_base "language"
-  OUTER_SPRINT tra_setup "setup"
-  OUTER_SPRINT ini_file "ntotsc"
-
-  INCLUDE "%MOD_FOLDER%/lib/sfo_immutable.tpa"
-
   INCLUDE "%MOD_FOLDER%/lib/always.tpa"
 END
 
@@ -33,111 +26,75 @@ LANGUAGE
 	~English~
 	~english~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 
 LANGUAGE
 	~German (translation by Leonardo Watson)~
 	~german~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/german/setup.tra~
-	~weidu_external/lang/ntotsc/german/setup.tra~
 	~ntotsc/language/german/journal.tra~
-	~weidu_external/lang/ntotsc/german/journal.tra~
 
 LANGUAGE
 	~Italian (translation by ilot)~
 	~italian~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/italian/setup.tra~
-	~weidu_external/lang/ntotsc/italian/setup.tra~
 	~ntotsc/language/italian/journal.tra~
-	~weidu_external/lang/ntotsc/italian/journal.tra~
 
 LANGUAGE
 	~Polish~
 	~polish~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/polish/setup.tra~
-	~weidu_external/lang/ntotsc/polish/setup.tra~
 	~ntotsc/language/polish/journal.tra~
-	~weidu_external/lang/ntotsc/polish/journal.tra~
 
 LANGUAGE
 	~Russian~
 	~russian~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/russian/setup.tra~
-	~weidu_external/lang/ntotsc/russian/setup.tra~
 	~ntotsc/language/russian/journal.tra~
-	~weidu_external/lang/ntotsc/russian/journal.tra~
 
 LANGUAGE
 	~French (translation by Streen)~
 	~french~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/french/setup.tra~
-	~weidu_external/lang/ntotsc/french/setup.tra~
 	~ntotsc/language/french/journal.tra~
-	~weidu_external/lang/ntotsc/french/journal.tra~
 
 LANGUAGE
 	~Spanish (translation by alaisFcZ)~
 	~spanish~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/spanish/setup.tra~
-	~weidu_external/lang/ntotsc/spanish/setup.tra~
 	~ntotsc/language/spanish/journal.tra~
-	~weidu_external/lang/ntotsc/spanish/journal.tra~
 
 /*
 LANGUAGE
 	~Castilian~
 	~castilian~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/castilian/setup.tra~
-	~weidu_external/lang/ntotsc/castilian/setup.tra~
 	~ntotsc/language/castilian/journal.tra~
-	~weidu_external/lang/ntotsc/castilian/journal.tra~
 */
 
 LANGUAGE
 	~Simplified Chinese(by Archenemy,Latest update by You Ye & Lewis Liu (V5.0.0))~
 	~schinese~
 	~ntotsc/language/english/setup.tra~
-	~weidu_external/lang/ntotsc/english/setup.tra~
 	~ntotsc/language/english/install.tra~
-	~weidu_external/lang/ntotsc/english/install.tra~
 	~ntotsc/language/english/journal.tra~
-	~weidu_external/lang/ntotsc/english/journal.tra~
 	~ntotsc/language/schinese/setup.tra~
-	~weidu_external/lang/ntotsc/schinese/setup.tra~
 	~ntotsc/language/schinese/journal.tra~
-	~weidu_external/lang/ntotsc/schinese/install.tra~
 	~ntotsc/language/schinese/journal.tra~
-	~weidu_external/lang/ntotsc/schinese/journal.tra~
 
 
 
@@ -284,7 +241,6 @@ AR9PBA  value
 AR9001  value
 AR9002  value
 AR9305  value~
-
 
 
 /*ACTION_IF FILE_EXISTS_IN_GAME ~item_use.2da~ BEGIN
@@ -2261,35 +2217,12 @@ ACTION_IF ENGINE_IS ~bgee bg2ee~ BEGIN
 
 END ELSE BEGIN
 
-/*
-	LAF HANDLE_TILECONV
-		STR_VAR
-		input_path    = ~%MOD_FOLDER%/base/tis/old~
-		tileconv_path = ~%MOD_FOLDER%/bin/%WEIDU_OS%tile2ee%exe%~
-		output_path   = ~%MOD_FOLDER%/biff~
-		RET
-		num_converted
-	END
-	ACTION_IF num_converted = 0 BEGIN
-		FAIL ~HANDLE_TILECONV conversion problem~
-	END
-*/
-
 	LAF HANDLE_TILESETS
 	  STR_VAR
 	    tiz_path = ~%MOD_FOLDER%/base/tis/old~
 	    tisunpack_path = ~%MOD_FOLDER%/bin/~
 	    output_path = ~override~ //~%MOD_FOLDER%/biff~
 	END
-
-/* Deactivated and switched back to HANDLE_TILESETS above - I have no idea what this does and it doesn't remove the .tis files from the biff folder upon deinstallation of the mod
-
-	OUTER_SPRINT ~tisunpack~ ~ntotsc%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%tisunpack%exe%~
-	ACTION_BASH_FOR ~%MOD_FOLDER%/base/tis/old~ ~.+\.tiz$~ BEGIN
-		AT_NOW ~%tisunpack% -s -f -o "NTotSC%os_slash%biff%os_slash%%BASH_FOR_RES%.tis" "NTotSC%os_slash%base%os_slash%tis%os_slash%old%os_slash%%BASH_FOR_RES%.tiz" %bash_debug%~ EXACT
-
-	END
-*/
 END
 
 LAF HANDLE_AUDIO
@@ -2297,24 +2230,7 @@ LAF HANDLE_AUDIO
     audio_path = ~%MOD_FOLDER%/base/ogg~
     oggdec_path = ~%MOD_FOLDER%/bin/win32~
     sox_path = ~%MOD_FOLDER%/bin/osx~
-	output_path = ~override~ //~%MOD_FOLDER%/biff~
 END
-
-
-/* Deactivated biffing because it caused problems with modding iOS devices
-also for BGT: for Megamod installs, player can use General Biffing if wanted.
-
-PRINT ~Biffing files....~
-
-MAKE_BIFF ~ntotsc~ BEGIN
-	~%MOD_FOLDER%/biff~ ~^.*$~
-	~%MOD_FOLDER%/base/bam~ ~^.*$~
-	~%MOD_FOLDER%/base/bmp~ ~^.*$~
-	~%MOD_FOLDER%/base/mos/%engine%~ ~^.*$~
-	~%MOD_FOLDER%/base/portraits/%engine%~ ~^.*$~
-	~%MOD_FOLDER%/base/portraits/l~ ~^.*$~
-END
-*/
 
 
 //COPY	~%MOD_FOLDER%/biff~ ~override~
@@ -2825,6 +2741,7 @@ BEGIN @55142
 SUBCOMPONENT @55141
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 15 LABEL ~NTotSC_SpellScrolls_Revised~
+REQUIRE_PREDICATE GAME_IS ~bgt eet bgee~ @529
 
 INCLUDE ~%MOD_FOLDER%/spells/setup_spells_revised.tpa~
 
@@ -2833,5 +2750,6 @@ BEGIN @55143
 SUBCOMPONENT @55141
 GROUP @566 /* ~Quests and Encounters~ */
 DESIGNATED 16 LABEL ~NTotSC_SpellScrolls_Original~
+REQUIRE_PREDICATE GAME_IS ~bgt eet bgee~ @529
 
 INCLUDE ~%MOD_FOLDER%/spells/setup_spells_original.tpa~

@@ -8,6 +8,8 @@ Changelog for v5.1.0 (Angel)
 - ntrobe04 - Set unusability flag for Bard class
 - Lower cased all filenames
 - Implemented basic mod immutability
+- Removed lib/a7_tools.tpa, none of its functions are actually in use
+- Removed archaic code now better handled by WeiDU functions
 
 
 Changelog for v2.1.0
