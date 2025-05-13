@@ -25,9 +25,9 @@ THEN
   RESPONSE #100
     CreateCreature("NTLEGIAN",[628.2376],8)
     CreateCreature("NTMARIEL",[785.2266],8)
-    CreateCreature("SHADOW01",[1067.2131],8)
-    CreateCreature("SHADOW01",[1048.2325],8)
-    CreateCreature("SHADOW01",[877.2368],8)
+    CreateCreature("NTSHADOW",[1067.2131],8)
+    CreateCreature("NTSHADOW",[1048.2325],8)
+    CreateCreature("NTSHADOW",[877.2368],8)
     Enemy()
 END
 

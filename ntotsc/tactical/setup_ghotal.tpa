@@ -56,7 +56,7 @@ BEGIN
     LAUNCH_PATCH_FUNCTION ALTER_AREA_ACTOR
       STR_VAR
       actor_name	= "Zombie"
-      cre_file		= "zombju01"
+      cre_file		= "ntzombju"
     END
 
     LAUNCH_PATCH_FUNCTION ALTER_AREA_ACTOR

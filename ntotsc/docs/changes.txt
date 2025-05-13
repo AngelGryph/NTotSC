@@ -10,6 +10,8 @@ Changelog for v5.1.0 (Angel)
 - Implemented basic mod immutability
 - Removed lib/a7_tools.tpa, none of its functions are actually in use
 - Removed archaic code now better handled by WeiDU functions
+- Removed dependency on BG2 resources, moved required ones into NT namespace
+- Removed several unused resources
 
 
 Changelog for v2.1.0
@@ -232,7 +234,7 @@ NTZOMBJU  - attack item changed to B-24.itm (compatibility with BG:EE), removed 
 
 4) New Creatures.
 
-BTELITE  - soundset restored
+NTELITE  - soundset restored
 NTBKNIGH - RING98A->RING98
 NTDEMON  - ring and weapon fixed
 Many small fixes...

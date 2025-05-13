@@ -1,5 +1,11 @@
 WITH_TRA ~ntotsc/language/english/tactical.tra~ ~ntotsc/language/%s/tactical.tra~
 BEGIN
+  ACTION_IF NOT FILE_EXISTS_IN_GAME "minhp20.itm"
+  BEGIN
+    COPY_EXISTING "minhp1.itm" "override/minhp20.itm"
+    LPF ALTER_EFFECT INT_VAR match_opcode = 208 parameter1 = 20 END
+  END
+
   COPY ~%MOD_FOLDER%/tactical/actors/nthaebal.cre~ ~override~
     SAY NAME1 @217 // Haeball from setup.tra
     SAY NAME2 @217 // Haeball from setup.tra

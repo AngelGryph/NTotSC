@@ -581,11 +581,14 @@ COPY ~%MOD_FOLDER%/base/itm/ntswd09.itm~ ~override~
 	SAY NAME2 @204
 	SAY DESC @205
 
-COPY ~%MOD_FOLDER%/base/itm/nthellsw.itm~ ~override~ //fire salamander weapon
 
 //Items needed by creatures
 
 COPY ~%MOD_FOLDER%/base/itm/nostring~ ~override~
+
+COPY ~%MOD_FOLDER%/base/itm/ntspectr.itm~ ~override~
+  LPF ALTER_EFFECT INT_VAR match_opcode = 139 parameter1 = GAME_IS "bgee" ? 25802 : 41495 END	// BGEE has different strings for level drain.
+
 
 /* Edited items from base game */
 
@@ -607,23 +610,6 @@ ACTION_IF ((NOT MOD_IS_INSTALLED ~DSotSC/DSotSC.TP2~ "0") AND (NOT MOD_IS_INSTAL
 	SAY UNIDENTIFIED_DESC @1245
 	SAY DESC @1245
 
-END
-
-
-
-/* Items needed for BG:EE */
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~minhp20.itm~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/minhp20.itm~ ~override~
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~MISC6M.itm~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/MISC6M.itm~ ~override~
-	SAY NAME2 @507
-	SAY DESC @508
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~SPECTR.itm~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/SPECTR.itm~ ~override~
 END
 
 
@@ -849,6 +835,10 @@ COPY ~%MOD_FOLDER%/base/cre/ntfalton.cre~ ~override~
 	SAY NAME1 @250
 	SAY NAME2 @250
 
+COPY ~%MOD_FOLDER%/base/cre/ntghastf.cre~ ~override~
+	SAY NAME1 @509
+	SAY NAME2 @509
+
 COPY ~%MOD_FOLDER%/base/cre/ntgghot1.cre~ ~override~
 	~%MOD_FOLDER%/base/cre/ntgghota.cre~ ~override~
 	SAY NAME1 @252
@@ -1019,7 +1009,6 @@ COPY ~%MOD_FOLDER%/base/cre/ntreedri.cre~ ~override~
 	WRITE_ASCII 0x248 ~ntreedri~ #8
 
 
-
 COPY ~%MOD_FOLDER%/base/cre/ntrudier.cre~ ~override~
 	SAY NAME1 @347
 	SAY NAME2 @347
@@ -1052,6 +1041,7 @@ COPY ~%MOD_FOLDER%/base/cre/ntselani.cre~ ~override~
 COPY ~%MOD_FOLDER%/base/cre/ntsirine.cre~ ~override~
 	SAY NAME1 @369
 	SAY NAME2 @369
+
 /*
 COPY ~%MOD_FOLDER%/base/cre/ntspider.cre~ ~override~
 	SAY NAME1 @371
@@ -1071,7 +1061,9 @@ COPY ~%MOD_FOLDER%/base/cre/nttordi1.cre~ ~override~
 	SAY NAME1 @378
 	SAY NAME2 @378
 
-
+COPY ~%MOD_FOLDER%/base/cre/ntvamflf.cre~ ~override~
+	SAY NAME1 @512
+	SAY NAME2 @512
 
 COPY ~%MOD_FOLDER%/base/cre/ntvaness.cre~ ~override~
 	SAY NAME1 @381
@@ -1121,12 +1113,6 @@ ACTION_IF NOT FILE_EXISTS_IN_GAME ~DEADB03.cre~ THEN BEGIN
 	SAY NAME2 @506
 END
 
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~GHASTF01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/GHASTF01.cre~ ~override~
-	SAY NAME1 @509
-	SAY NAME2 @509
-END
-
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC01.cre~ THEN BEGIN
   COPY ~%MOD_FOLDER%/bgee/ORC01.cre~ ~override~
 	SAY NAME1 @521
@@ -1155,37 +1141,6 @@ ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC06.cre~ THEN BEGIN
 	SAY NAME1 @525
 	SAY NAME2 @525
 END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~SHADOW01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/SHADOW01.cre~ ~override~
-	SAY NAME1 #23015 //Shadow Warrior
-	SAY NAME2 #23015 //Shadow Warrior
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~SKELAR01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/SKELAR01.cre~ ~override~
-	SAY NAME1 @511
-	SAY NAME2 @511
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~SKELWA01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/SKELWA01.cre~ ~override~
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~SPIDWR01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/SPIDWR01.cre~ ~override~
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~VAMFLF01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/VAMFLF01.cre~ ~override~
-	SAY NAME1 @512
-	SAY NAME2 @512
-END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~ZOMBJU01.cre~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/ZOMBJU01.cre~ ~override~
-END
-
 
 /* ~ORC03.cre~ */
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~ORC03.cre~ THEN BEGIN
@@ -2084,10 +2039,6 @@ END
 ///////////////////////////////////////////
 /* scripts needed for BG:EE */
 
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~DRUID6A.bcs~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/DRUID6A.bcs~ ~override~
-END
-
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~MAGE10A.bcs~ THEN BEGIN
   COPY ~%MOD_FOLDER%/bgee/MAGE10A.bcs~ ~override~
 END
@@ -2111,11 +2062,6 @@ END
 ACTION_IF NOT FILE_EXISTS_IN_GAME ~PRIEST12.bcs~ THEN BEGIN
   COPY ~%MOD_FOLDER%/bgee/PRIEST12.bcs~ ~override~
 END
-
-ACTION_IF NOT FILE_EXISTS_IN_GAME ~VAMPIR01.BCS~ THEN BEGIN
-  COPY ~%MOD_FOLDER%/bgee/VAMPIR01.BCS~ ~override~
-END
-
 
 
 /////                                                  \\\\\
@@ -2674,7 +2620,7 @@ COPY ~%MOD_FOLDER%/base/cre/nttytus.cre~ ~override~
 EXTEND_BOTTOM ~%CloakwoodMines_MineShed_BCS%.bcs~ ~%MOD_FOLDER%/modify/bcs/ar1809.baf~ EVALUATE_BUFFER
 
 
-COPY ~%MOD_FOLDER%/base/cre/btelite.cre~ ~override~
+COPY ~%MOD_FOLDER%/base/cre/ntelite.cre~ ~override~
 	SAY NAME1 @221
 	SAY NAME2 @221
 

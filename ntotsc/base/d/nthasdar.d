@@ -96,9 +96,9 @@ IF ~~ THEN BEGIN 11
 SetGlobal("NTTalkedToHasdar","GLOBAL",4)
 CreateCreature("NTLEGIAN",[198.738],8)
 CreateCreature("NTMARIEL",[56.748],8)
-CreateCreature("SHADOW01",[84.618],0)
-CreateCreature("SHADOW01",[38.719],0)
-CreateCreature("SHADOW01",[54.798],10)
+CreateCreature("NTSHADOW",[84.618],0)
+CreateCreature("NTSHADOW",[38.719],0)
+CreateCreature("NTSHADOW",[54.798],10)
 EraseJournalEntry(@10021)
 ActionOverride(Myself,EscapeArea())~ SOLVED_JOURNAL @10022 EXIT
 END
@@ -109,9 +109,9 @@ IF ~~ THEN BEGIN 12
 SetGlobal("NTTalkedToHasdar","GLOBAL",4)
 CreateCreature("NTLEGIAN",[198.738],8)
 CreateCreature("NTMARIEL",[56.748],8)
-CreateCreature("SHADOW01",[84.618],0)
-CreateCreature("SHADOW01",[38.719],0)
-CreateCreature("SHADOW01",[54.798],10)
+CreateCreature("NTSHADOW",[84.618],0)
+CreateCreature("NTSHADOW",[38.719],0)
+CreateCreature("NTSHADOW",[54.798],10)
 EraseJournalEntry(@10021)
 ActionOverride(Myself,EscapeArea())~ SOLVED_JOURNAL @10022 EXIT
 END
@@ -123,9 +123,9 @@ EraseJournalEntry(@10021)
 ActionOverride(Myself,Enemy())
 CreateCreature("NTLEGIAN",[198.738],8)
 CreateCreature("NTMARIEL",[56.748],8)
-CreateCreature("SHADOW01",[84.618],0)
-CreateCreature("SHADOW01",[38.719],0)
-CreateCreature("SHADOW01",[54.798],10)
+CreateCreature("NTSHADOW",[84.618],0)
+CreateCreature("NTSHADOW",[38.719],0)
+CreateCreature("NTSHADOW",[54.798],10)
 ~ EXIT
 END
 
@@ -136,9 +136,9 @@ IF ~~ THEN DO ~EraseJournalEntry(@10021)
 ActionOverride(Myself,Enemy())
 CreateCreature("NTLEGIAN",[198.738],8)
 CreateCreature("NTMARIEL",[56.748],8)
-CreateCreature("SHADOW01",[84.618],0)
-CreateCreature("SHADOW01",[38.719],0)
-CreateCreature("SHADOW01",[54.798],10)
+CreateCreature("NTSHADOW",[84.618],0)
+CreateCreature("NTSHADOW",[38.719],0)
+CreateCreature("NTSHADOW",[54.798],10)
 ~ EXIT
 END
 

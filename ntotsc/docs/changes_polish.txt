@@ -80,7 +80,7 @@ Patchowanie DVsów dla wszystkich stworzeñ musi byæ wykonane przez WRITE_ASCII, n
 
 4) Nowe stworzenia.
 
-BTELITE  - soundset przywrócony
+NTELITE  - soundset przywrócony
 NTBKNIGH - RING98A->RING98
 NTDEMON  - pierœcieñ i broñ naprawione
 Wiele ma³ych poprawek...
