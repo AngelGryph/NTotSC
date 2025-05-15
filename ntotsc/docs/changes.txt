@@ -3,6 +3,7 @@ Changelog for v5.1.0 (Angel)
 - ntaxe01 - Corrected duration of stun effect
 - ntblun03 - Corrected duration of stun effect
 - ntblun04 - Corrected thac0 bonus, enchantment level and speed
+- ntkeypb3 - Given a unique icon, by Zenblack
 - ntplat04 - Set unusability flag for Avenger kit
 - ntring04 - Corrected bam offset
 - ntrobe04 - Set unusability flag for Bard class
