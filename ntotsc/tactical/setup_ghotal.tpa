@@ -6,6 +6,7 @@ BEGIN
     SAY NAME2 @252 // General Ghotal from setup.tra
 
   COPY "%MOD_FOLDER%/tactical/items/ntghotal.itm" "override"
+  COPY "%MOD_FOLDER%/tactical/items/ntgolbon.itm" "override"
 
   ADD_SPELL "%MOD_FOLDER%/tactical/spells/ntgchill.spl" 3 5 NTGHOTAL_GRAVE_CHILL
     SAY NAME1 @3
@@ -31,19 +32,6 @@ BEGIN
   COPY "%MOD_FOLDER%/tactical/actors/ntgolsto.cre" "override"
     SAY NAME1 @7
     SAY NAME2 @7
-
-
-  ACTION_IF NOT FILE_EXISTS_IN_GAME "s3-8m3.itm"
-  BEGIN
-    COPY_EXISTING "s1-8.itm" "override/s3-8m3"
-      WRITE_LONG 0x0018 THIS | BIT6	// Magical
-      WRITE_LONG 0x0060 3		// Enchantment
-
-      LAUNCH_PATCH_FUNCTION ALTER_ITEM_HEADER
-        INT_VAR
-	dicenumber	= 3
-      END
-  END
 
 
   COPY_EXISTING "ar11pb.are" "override"
