@@ -1042,11 +1042,6 @@ COPY ~%MOD_FOLDER%/base/cre/ntsirine.cre~ ~override~
 	SAY NAME1 @369
 	SAY NAME2 @369
 
-/*
-COPY ~%MOD_FOLDER%/base/cre/ntspider.cre~ ~override~
-	SAY NAME1 @371
-	SAY NAME2 @371
-*/
 COPY ~%MOD_FOLDER%/base/cre/ntszyper.cre~ ~override~
 	SAY NAME1 @376
 	SAY NAME2 @376
